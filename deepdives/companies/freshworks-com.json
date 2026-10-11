@@ -1,0 +1,57 @@
+{
+  "company": "Freshworks (Freshdesk / Freshservice)",
+  "domain": "freshworks.com",
+  "key_path": [
+    "Start a free trial at freshworks.com (work email, company name). This creates <subdomain>.freshdesk.com (or .freshservice.com)",
+    "Verify email / activate account via link",
+    "Profile settings > View API key (may require completing a captcha)",
+    "Call REST v2 with HTTP Basic auth: API key as username, 'X' as password, against https://<subdomain>.freshdesk.com/api/v2/",
+    "MCP: point the client at https://<subdomain>.freshdesk.com/mcp with the API key in the Authorization header (Growth plan or higher)"
+  ],
+  "human_gates": [
+    "email_verification",
+    "captcha"
+  ],
+  "human_gates_notes": "No card for the trial. MCP is plan-gated (Growth/Pro/Enterprise) with monthly/annual action caps, so post-trial use effectively needs a paid plan. No regulatory gate.",
+  "agent_native_auth": {
+    "cli_login": "partial. The Freshworks FDK CLI is for building marketplace apps, not for minting API keys",
+    "oauth_dcr_for_mcp": "no for Freshdesk (API key only). Freshservice MCP supports OAuth 2.0 + API key",
+    "provisioning_api_mint_keys": "no. One personal API key per agent user",
+    "scoped_keys": "no. The key inherits the agent user's role permissions; scope by creating a restricted agent",
+    "sandbox_test_credentials": "sandbox exists on higher plans (Enterprise); the trial account itself serves as the test env",
+    "free_tier": "trial (14-21 days); MCP actions included per plan (e.g. Growth 25/min)"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP",
+    "remote": {
+      "url": "https://<subdomain>.freshdesk.com/mcp (custom domains not supported); Freshservice equivalent",
+      "transport": "Streamable HTTP",
+      "auth": "API key in Authorization header (Freshdesk); OAuth 2.0 or API key (Freshservice)"
+    },
+    "status": "GA 2026-09-10. EAP pricing/limits took effect Oct 2026. Limits: Growth 25 actions/min, Pro 50, Enterprise 100; annual action allowances (1,200/6,000/12,000)",
+    "local": "none official (community freshdesk-mcp/freshservice-mcp exist)",
+    "one_click_install": "no. JSON/CLI snippets for Claude Code, Cursor, VS Code, Copilot Studio"
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes at marketing level. https://www.freshworks.com/llms.txt (last updated 2025-12-17, slightly stale, has disambiguation guide). No llms.txt on developers.freshworks.com or developers.freshdesk.com (404)",
+    "markdown_pages": "no",
+    "openapi": "no official OpenAPI spec URL found for Freshdesk v2 API",
+    "use_with_ai_page": "support articles 50000012670 (Freshdesk MCP) and 50000012678 (Freshservice MCP)"
+  },
+  "time_to_first_call_minutes": {
+    "rest_or_mcp_on_trial": 10
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "score_justification": "A per-tenant hosted MCP is now GA and the API key is trivially found, but there is no OAuth for Freshdesk MCP, no key scoping or minting API, no dev-docs llms.txt, and MCP is metered and plan-gated.",
+  "best_practice": "The MCP lives on the customer's own subdomain, so tenant routing is implicit with no extra config",
+  "biggest_gap": "Freshdesk MCP auth is a full-power personal API key in a header, and action quotas are small (100/month on Growth during EAP)",
+  "sources": [
+    "https://support.freshdesk.com/support/solutions/articles/50000012670",
+    "https://support.freshservice.com/en/support/solutions/articles/50000012678-model-context-protocol-mcp-integration-in-freshservice-eap-",
+    "https://www.freshworks.com/llms.txt",
+    "https://developers.freshworks.com/",
+    "https://www.eesel.ai/blog/freshworks-mcp-gateway-explained"
+  ]
+}

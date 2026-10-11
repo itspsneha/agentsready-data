@@ -1,0 +1,60 @@
+{
+  "company": "HubSpot",
+  "domain": "hubspot.com",
+  "key_path": [
+    "Sign up for free CRM (or free developer account) at hubspot.com with Google/Microsoft or email",
+    "Verify email; complete onboarding questionnaire (company, role; phone may be requested)",
+    "Agent: curl -fsSL https://api.hubapi.com/hub/cli/backend/hub-cli/latest/install.sh | sh; run 'hubspot auth login' (browser OAuth, user-scoped)",
+    "For a raw token: Settings > Integrations > Service keys (account service key) or legacy private app > copy pat-na1-... token",
+    "Call https://api.hubapi.com/crm/v3/objects/contacts with Bearer token (or 'hubspot whoami')"
+  ],
+  "human_gates": [
+    "email_verification",
+    "admin_approval"
+  ],
+  "human_gates_notes": "Super Admins can govern who connects the Agent CLI (App Governance beta). For a custom MCP client, human must create an 'MCP connector' (user-level app) in HubSpot to get OAuth credentials - no DCR.",
+  "agent_native_auth": {
+    "cli_device_login": "yes - Agent CLI 'hubspot auth login' (BETA) browser OAuth with auto refresh; developer CLI 'hs account auth' uses personal access key",
+    "mcp_oauth_dcr": "no - mcp.hubspot.com authorization server has no registration_endpoint (verified); requires creating an MCP connector app",
+    "personal_access_tokens": "yes - personal access key (CLI), service keys, private app tokens",
+    "scoped_tokens": "yes - scopes per service key / app",
+    "management_api_mints_keys": "no",
+    "free_tier_or_sandbox": "yes - free CRM, free developer account, configurable test accounts"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.hubspot.com (Claude directory uses https://mcp.hubspot.com/anthropic)",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.1 + PKCE with pre-created MCP connector credentials; user-level scopes"
+    },
+    "local": "Developer MCP server via HubSpot CLI 'hs mcp setup' (for building apps/CMS, not CRM data)",
+    "type": "product MCP (remote) + developer/build MCP (local)",
+    "one_click_install": "pre-built AI connectors for Claude, ChatGPT, Copilot, Gemini (hubspot.com/ai-tools); none for Cursor/VS Code",
+    "claude_directory": true,
+    "chatgpt_directory": true
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.hubspot.com/docs/llms.txt (200; root developers.hubspot.com/llms.txt 404) with sub-indexes per area (APIs 3686 pages)",
+    "llms_full_txt": "not found",
+    "markdown_pages": "yes - .md pages with agent index header",
+    "openapi": "yes - versioned specs listed in llms.txt e.g. /docs/specs/2026-09/*.json",
+    "ai_page": "https://developers.hubspot.com/docs/build-with-ai/ (remote MCP, developer MCP, Agent CLI, agent context files)",
+    "agents_md_or_rules": "yes - agent context files auto-added to CLI projects; skills via 'npx skills add hubspot/agent-cli-skills'"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Agent-first CLI with browser login, dry-run, and skills is excellent, but custom MCP clients need a hand-made connector app and the CLI is beta.",
+  "best_practice": "An Agent CLI built for agents: self-describing --help, dry-run mode for every write, installable skills, and an install prompt to paste into the agent.",
+  "biggest_gap": "Remote MCP has no DCR - outside the pre-built Claude/ChatGPT connectors, users must create an MCP connector app to get OAuth credentials.",
+  "sources": [
+    "https://developers.hubspot.com/mcp",
+    "https://developers.hubspot.com/docs/llms.txt",
+    "https://developers.hubspot.com/docs/build-with-ai/remote-mcp-server.md",
+    "https://developers.hubspot.com/docs/build-with-ai/agent-cli.md",
+    "https://developers.hubspot.com/docs/developer-tooling/local-development/agent-cli/guide.md",
+    "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/integrate-with-the-remote-hubspot-mcp-server.md",
+    "https://mcp.hubspot.com/.well-known/oauth-authorization-server"
+  ]
+}

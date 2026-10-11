@@ -1,0 +1,91 @@
+{
+  "company": "Shopify",
+  "domain": "shopify.com",
+  "key_path": [
+    "Agentic-commerce path (fastest): `npm install -g @shopify/ucp-cli` + `claude plugin install shopify-ai-toolkit@claude-plugins-official`; `ucp profile init --name agent`; `ucp catalog search ...` works with NO credential (anonymous tier). Global Catalog MCP tools/list answered unauthenticated in our probe.",
+    "For Token tier: sign up / log in at dev.shopify.com (Dev Dashboard) -> Catalogs -> 'Get an API key' -> name -> Create -> copy client_id/client_secret -> exchange for a JWT bearer token at runtime.",
+    "Admin API path: Dev Dashboard account -> create free dev store -> `shopify app init` (Shopify CLI opens browser login) -> app installed on dev store -> Admin API access token.",
+    "Merchant path with no developer work: add Claude connector https://setup.shopify.com/mcp (OAuth, CIMD) -> sign in to Shopify -> manage store / even create a business before a store exists."
+  ],
+  "human_gates": [
+    "email_verification",
+    "manual_approval (only for Token-tier complete_checkout permission / higher rate limits via Shopify rep)",
+    "waitlist (Universal Cart API early access Google Form)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "yes - Shopify CLI browser login; UCP CLI profile init is local and needs no account",
+    "oauth_dcr_for_mcp": "yes (CIMD, not RFC7591) - setup.shopify.com AS metadata advertises client_id_metadata_document_supported:true, token auth 'none', PKCE S256",
+    "sandboxes": "yes - free development stores",
+    "scoped_tokens": "yes - granular Admin scopes (write_products, read_all_orders...), buyer-linked tokens, read_global_api_orders",
+    "free_tier": "yes - catalog anonymous tier, dev stores and API keys are free",
+    "evidence": "https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting.md ; https://setup.shopify.com/.well-known/oauth-protected-resource ; https://setup.shopify.com/auth/.well-known/oauth-authorization-server"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Global Catalog MCP (UCP)",
+        "url": "https://catalog.shopify.com/api/ucp/mcp",
+        "transport": "streamable HTTP (JSON-RPC POST)",
+        "auth": "anonymous / signed (UCP agent profile) / bearer JWT from Dev Dashboard; 5 rps per client default"
+      },
+      {
+        "name": "Storefront Catalog/Cart/Checkout/Order MCP (UCP)",
+        "url": "https://{storedomain}/api/ucp/mcp",
+        "transport": "streamable HTTP",
+        "auth": "requires meta.ucp-agent.profile URL; complete_checkout only for trusted Token tier"
+      },
+      {
+        "name": "Shopify store-management connector",
+        "url": "https://setup.shopify.com/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth 2.1 + PKCE, CIMD; 35 Admin scopes"
+      }
+    ],
+    "local": [
+      "Dev MCP: `npx -y @shopify/dev-mcp@latest` (docs + schema validation, no auth)",
+      "Shopify AI Toolkit plugin/skills for Claude Code, Codex, Cursor, VS Code, Antigravity, OpenClaw"
+    ],
+    "types": [
+      "docs MCP",
+      "product/admin MCP",
+      "storefront/commerce MCP (UCP)"
+    ],
+    "directories": "Claude directory: 'Shopify' connector (Anthropic verified, setup.shopify.com/mcp). Toolkit is in claude-plugins-official and openai-curated Codex plugins. Agentic Storefronts syndicate merchants into ChatGPT/Gemini/Copilot (secondary sources).",
+    "agentic_commerce_protocols": [
+      "Universal Commerce Protocol (UCP, co-developed with Google; spec version 2026-08-25)",
+      "Agentic Storefronts -> ChatGPT/Copilot/Gemini (reported)",
+      "OpenAI ACP / Instant Checkout historically (reported wound down Mar 2026 - secondary source)"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "www.shopify.com/llms.txt exists (marketing). shopify.dev/llms.txt returns the HTML app shell (no real llms.txt) - gap.",
+    "markdown_pages": "yes - every shopify.dev page has `.md` twin + <link rel=alternate type=text/markdown>",
+    "openapi": "GraphQL schemas exposed via Dev MCP; no OpenAPI (GraphQL-first)",
+    "build_with_ai": "yes - /docs/apps/build/ai-toolkit and /docs/agents (agentic commerce hub)",
+    "robots_ai_stance": "shopify.com and shopify.dev: no AI-specific blocks (only CCBot group mirrors * rules); open"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": true,
+  "agent_friendliness_score": 9,
+  "score_justification": "Anonymous product-search MCP + CLI + plugins in both Claude and Codex marketplaces + CIMD-based store connector; a coding agent can make a real catalog call with zero human steps.",
+  "best_practice": "Tiered trust (anonymous -> signed profile -> token) lets agents start with no credential and upgrade; every doc page has a .md twin.",
+  "biggest_gap": "Completing checkout in-agent requires trusted-tier approval (most agents hand off to continue_url); Universal Cart behind a Google-Form waitlist; shopify.dev lacks a real llms.txt.",
+  "sources": [
+    "https://shopify.dev/docs/apps/build/ai-toolkit.md",
+    "https://shopify.dev/docs/agents.md",
+    "https://shopify.dev/docs/agents/get-started/quickstart.md",
+    "https://shopify.dev/docs/agents/get-started/authentication.md",
+    "https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting.md",
+    "https://shopify.dev/docs/agents/catalog/global-catalog.md",
+    "https://shopify.dev/docs/agents/catalog/storefront-catalog.md",
+    "https://catalog.shopify.com/api/ucp/mcp (probed: tools/list 200 unauthenticated)",
+    "https://setup.shopify.com/.well-known/oauth-protected-resource",
+    "https://setup.shopify.com/auth/.well-known/oauth-authorization-server",
+    "https://claude.com/marketplace/connectors/shopify",
+    "https://www.shopify.com/llms.txt",
+    "https://www.shopify.com/robots.txt",
+    "https://shopify.dev/robots.txt",
+    "https://naturaily.com/blog/agentic-commerce-shopify-guide"
+  ]
+}

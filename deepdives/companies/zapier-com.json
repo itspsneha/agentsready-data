@@ -1,0 +1,59 @@
+{
+  "company": "Zapier",
+  "domain": "zapier.com",
+  "key_path": [
+    "Fastest (MCP): add https://mcp.zapier.com/api/v1/connect as a connector in the MCP client, then sign in/sign up via OAuth; Zapier auto-provisions the server with actions for already-connected apps",
+    "CLI/SDK: `npx zapier-sdk signup --non-interactive` (or `--headless` for remote agents: the user opens the URL and pastes the callback URL back)",
+    "For CI: `npx zapier-sdk create-client-credentials \"my-script\"`; connection-token fallback created at mcp.zapier.com",
+    "Connect each third-party app (OAuth per app) before actions do anything useful"
+  ],
+  "human_gates": [
+    "email_verification (or Google/Microsoft OAuth)",
+    "per-app OAuth connections",
+    "admin approval of connector in managed orgs"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: zapier-sdk signup/login with browser or headless callback-paste mode, plus --non-interactive for agents",
+    "oauth_dcr_for_mcp": "yes: OAuth from inside the MCP client; Zapier creates the server during sign-in",
+    "provisioning_api_mints_keys": "yes: `create-client-credentials` for long-lived client credentials",
+    "scoped_keys": "partial: connection token per MCP server (one server per client); tool bundles",
+    "test_dev_instances": "no",
+    "free_tier": "yes: free plan with task allowance; each successful MCP tool call costs 2 tasks",
+    "keyless_claimable_dev_mode": "no"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.zapier.com/api/v1/connect",
+      "transport": "streamable HTTP only (no SSE)",
+      "auth": "OAuth (default) or connection token (Bearer header preferred over ?token=)"
+    },
+    "local": "none (remote only)",
+    "docs_mcp": "none separate",
+    "one_click": "directory connectors in Claude/ChatGPT etc.; docs have 'Open in Claude Code / Cursor / VS Code / Codex' deeplinks that pre-fill a full setup prompt; `npx @zapier/install-zapier` install-router skill"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.zapier.com/llms.txt (opens with a 'For AI agents' section: ALWAYS/NEVER rules, retired NLA warning)",
+    "llms_full_txt": "https://docs.zapier.com/llms-full.txt (explicitly 'do not fetch for direct context')",
+    "md_pages": "yes, plus 'Agent routing guidance' blocks on pages",
+    "openapi": "n/a (SDK/MCP-first)",
+    "agent_skills": "`npx skills add zapier/sdk -y`; MCP onboarding skill",
+    "use_with_ai_page": "https://docs.zapier.com/install.md (router: MCP vs SDK vs CLI)"
+  },
+  "time_to_first_call_minutes": 4,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "OAuth MCP that provisions itself on sign-in, a CLI signup built for agents including headless mode, and docs that route agents explicitly. Value still depends on the human connecting each app.",
+  "best_practice": "Agent routing guidance in docs ('do not tell the user to create a server first'), plus 'Open in <agent>' deeplinks carrying a full step-by-step setup prompt, plus headless signup with callback-URL paste for agents running remotely",
+  "biggest_gap": "Each downstream app still needs a human OAuth, and MCP calls cost tasks (2 per call) on small free quotas",
+  "notes": "AI Actions / NLA are retired; docs warn agents not to recommend them.",
+  "sources": [
+    "https://docs.zapier.com/llms.txt",
+    "https://docs.zapier.com/mcp/overview/how-connections-work.md",
+    "https://docs.zapier.com/mcp/get-started/quickstart.md",
+    "https://docs.zapier.com/install.md",
+    "https://docs.zapier.com/sdk/using-the-cli.md",
+    "https://docs.zapier.com/mcp/overview/usage.md",
+    "https://zapier.com/sign-up"
+  ]
+}

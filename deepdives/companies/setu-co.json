@@ -1,0 +1,74 @@
+{
+  "company": "Setu",
+  "domain": "setu.co",
+  "key_path": [
+    "Sign up on The Bridge (bridge.setu.co/v2/signup) with an official work email + password",
+    "Confirm email via inbox link",
+    "Log in, enter business name (optional 2FA via email OTP)",
+    "Product store > pick a product > create a child sub-org / product instance",
+    "Test (sandbox) credentials are issued after the child org is set up. Choose OAuth keys (Org settings > API keys; can enable/disable/regenerate) or JWT keys per product config",
+    "Go-live: fill production details + KYC (PAN, GST, certificates), submit for Setu review, sign pricing agreements. Some products (e.g. AA FIU, multi-AA) also need Sahamati/regulatory onboarding and sales contact"
+  ],
+  "human_gates": [
+    "email_verification",
+    "kyc_business_verification",
+    "manual_approval",
+    "regulatory_registration",
+    "sales_contact"
+  ],
+  "human_gates_notes": "Sandbox needs only email verification. Production needs KYC review, signed agreements and, for Account Aggregator, FIU onboarding with Sahamati (RBI framework). The BillPay consumer MCP requires the end user's phone OTP.",
+  "agent_native_auth": {
+    "cli_login": "no",
+    "oauth_dcr_for_mcp": "yes for the BillPay consumer MCP (OAuth selected in ChatGPT/Claude custom connector, then phone OTP). Docs MCP needs no auth",
+    "provisioning_api_mint_keys": "no evidence (keys created in the Bridge UI)",
+    "scoped_keys": "yes. OAuth keys map one-to-many/many-to-one to product configurations and can be enabled/disabled/regenerated",
+    "sandbox_test_credentials": "yes. Self-serve sandbox test credentials per product instance",
+    "free_tier": "yes. The Bridge is free and self-serve and the sandbox is free; production is priced per agreement"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://docs.setu.co/api/mcp",
+      "transport": "Streamable HTTP",
+      "auth": "none (read-only)",
+      "tools": [
+        "search",
+        "list_pages",
+        "get_page"
+      ],
+      "setup": "claude mcp add --transport http --scope user setu-docs https://docs.setu.co/api/mcp; also documented for Codex, Cursor, VS Code, the Claude app and ChatGPT"
+    },
+    "product_mcp": {
+      "url": "https://billpay-mcp.setu.co/mcp",
+      "transport": "Streamable HTTP",
+      "auth": "OAuth + end-user phone OTP",
+      "scope": "consumer bill payments (BBPS): fetch/pay bills, history. Not a developer/admin MCP"
+    },
+    "local": null,
+    "one_click_install": "no deep-link buttons, but copy-paste one-liners per client"
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes. https://docs.setu.co/llms.txt (with descriptions, points to MCP)",
+    "llms_full_txt": "yes. https://docs.setu.co/llms-full.txt (~2.2 MB)",
+    "markdown_pages": "yes. Append .mdx to any docs URL",
+    "openapi": "API references per product in docs; no single OpenAPI URL found in llms.txt",
+    "use_with_ai_page": "yes. https://docs.setu.co/dev-tools/ai-tools (dated menu names 'as of September 2026')"
+  },
+  "time_to_first_call_minutes": {
+    "sandbox": 15,
+    "production": "days-weeks (KYC + agreements)"
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Best docs-for-agents in the batch (llms.txt, llms-full, .mdx pages, no-auth docs MCP with per-client instructions) and a self-serve sandbox, but key creation is UI-only and production is KYC/agreement gated.",
+  "best_practice": "An llms.txt that tells the agent in its header where llms-full.txt, the markdown variant and the MCP server live, plus an AI-tools page with exact commands for every client",
+  "biggest_gap": "No product/admin MCP or API for developers to mint sandbox keys; the only product MCP is consumer-facing BillPay",
+  "sources": [
+    "https://docs.setu.co/llms.txt",
+    "https://docs.setu.co/llms-full.txt",
+    "https://docs.setu.co/dev-tools/ai-tools.mdx",
+    "https://docs.setu.co/dev-tools/bridge/v1/org-settings/api-keys.mdx",
+    "https://docs.setu.co/payments/billpay/mcp/integration-guide.mdx",
+    "https://bridge.setu.co/v2/signup"
+  ]
+}

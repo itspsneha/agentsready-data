@@ -1,0 +1,55 @@
+{
+  "company": "Algolia",
+  "domain": "algolia.com",
+  "key_path": [
+    "Agent installs CLI + skills (`claude plugin install algolia-cli@algolia-skills` or `brew install algolia/algolia-cli/algolia`)",
+    "`algolia auth signup` opens browser sign-up page (email/Google/GitHub) - human completes form + email verification",
+    "Same command completes OAuth; CLI fetches applications and stores Admin API key in OS keychain (no copy-paste)",
+    "`algolia application create --name ... --region ...` if none exists (free Build plan auto-created on signup)",
+    "First call: `algolia indices list` / import records"
+  ],
+  "human_gates": [
+    "email_verification",
+    "oauth_consent_click (browser)",
+    "dashboard toggle to enable Productivity MCP"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes - `algolia auth login` / `algolia auth signup` browser OAuth, `--no-browser` prints URL for SSH/containers; keys stored in keychain",
+    "oauth_dcr_for_mcp": "yes - Productivity MCP advertises RFC 9728 metadata; authorization server dashboard.algolia.com exposes registration_endpoint https://dashboard.algolia.com/2/oauth/register (client ID/secret left empty in Claude/ChatGPT)",
+    "provisioning_api_mints_keys": "yes - /1/keys creates scoped API keys; secured API keys derivable client-side; CLI `application create`",
+    "scoped_keys": "yes - ACLs, index restrictions, rate limits, referers, secured keys",
+    "test_credentials_sandbox": "partial - public demo app credentials (e.g. in llms.txt for site search); no sandbox mode",
+    "free_tier": "yes - Build plan, no card"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": "Productivity MCP https://mcp.algolia.com/mcp, Streamable HTTP, OAuth (must be enabled in dashboard first)",
+    "docs_mcp": "DevEx MCP https://mcp.algolia.com/1/snippets/mcp (no auth, version-accurate client snippets from OpenAPI) + DocSearch MCP",
+    "other": "Public MCP for unauthenticated agent-facing search over curated indices",
+    "product_mcp_local": "legacy algolia/mcp-node (superseded by hosted)",
+    "one_click": "Cursor deeplinks for Productivity + DevEx; claude mcp add; ChatGPT/Claude connector instructions; Gemini CLI; Claude Code plugin marketplace algolia/skills"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://www.algolia.com/llms.txt (points agents to build-with-ai.md) and https://www.algolia.com/doc/llms.txt (per-section _llms/*.txt)",
+    "markdown_pages": "yes - .md docs",
+    "openapi": "yes - /specs/search.yml, recommend.yml, ingestion.yml, agent-studio.yml etc. listed in doc llms.txt",
+    "use_with_ai_page": "https://www.algolia.com/doc/guides/get-started/build-with-ai.md - contains an explicit 'Agent setup' block telling agents exactly which commands to run and which to skip",
+    "agents_md_or_rules": "algolia/skills repo (algolia-cli, quickstart, crawler, data-modeling, audit... with evals)"
+  },
+  "time_to_first_call_minutes": 5,
+  "time_to_first_call_notes": "Agent runs signup/login; human completes browser signup + consent; CLI auto-provisions keys.",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "agent_friendliness_justification": "CLI-driven signup + OAuth login with automatic key provisioning, hosted OAuth MCP with DCR, unauthenticated DevEx MCP, and agent-addressed setup instructions in llms.txt.",
+  "best_practice": "llms.txt line 'Fetch and follow the instructions at build-with-ai.md' leading to an agent-only, validated setup script that tells the agent what NOT to run.",
+  "biggest_gap": "Productivity MCP must be switched on in the dashboard by a human before OAuth works; signup still a browser form.",
+  "sources": [
+    "https://www.algolia.com/llms.txt",
+    "https://www.algolia.com/doc/llms.txt",
+    "https://www.algolia.com/doc/guides/get-started/build-with-ai.md",
+    "https://raw.githubusercontent.com/algolia/skills/main/skills/algolia-cli/references/getting-started.md",
+    "https://raw.githubusercontent.com/algolia/skills/main/skills/algolia-cli/SKILL.md",
+    "https://mcp.algolia.com/.well-known/oauth-protected-resource",
+    "https://dashboard.algolia.com/.well-known/oauth-authorization-server"
+  ]
+}

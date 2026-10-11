@@ -1,0 +1,56 @@
+{
+  "company": "Pinecone",
+  "domain": "pinecone.io",
+  "key_path": [
+    "Sign up at app.pinecone.io (email/Google/GitHub/Microsoft), verify email",
+    "Starter (free) org + default project auto-created",
+    "Agent path: `brew install pinecone-io/tap/pinecone` then `pc auth login` (browser URL, auto-targets org/project)",
+    "`pc api-key create` mints a project API key (or Console > API Keys > Create)",
+    "Configure local MCP with PINECONE_API_KEY"
+  ],
+  "human_gates": [
+    "email_verification",
+    "browser_login_click (CLI)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes - `pc auth login` browser flow; token refreshes, valid up to 120 days; service-account auth for CI",
+    "oauth_dcr_for_mcp": "no for the main Database MCP (API key in env); Nexus MCP is Streamable HTTP with API key/session token",
+    "provisioning_api_mints_keys": "yes - Admin API (service-account access token) and CLI `pc api-key create/list/update`; Terraform provider manages projects + keys; 'Connect to Pinecone' popup/widget lets third-party apps get a user's key",
+    "scoped_keys": "yes - project-scoped keys with roles (All / ReadOnly / control vs data plane)",
+    "test_credentials_sandbox": "partial - Pinecone Local emulator (Docker) for offline testing",
+    "free_tier": "yes - Starter plan, no card"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_local": "npx -y @pinecone-database/mcp (env PINECONE_API_KEY): docs search + index management, upsert, query",
+    "product_mcp_remote": "Assistant MCP (managed remote endpoint per assistant, API key) and Nexus MCP (Streamable HTTP); no hosted OAuth MCP for Database",
+    "docs_mcp": "bundled in @pinecone-database/mcp (search-docs tool)",
+    "one_click": "`claude plugin install pinecone`, Cursor `/add-plugin pinecone`, Codex plugin, `npx skills add pinecone-io/skills`"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.pinecone.io/llms.txt (index, splits into _llms/pinecone-database.txt etc.), https://docs.pinecone.io/llms-full.txt (3.5MB)",
+    "markdown_pages": "yes - .md pages (Mintlify)",
+    "openapi": "yes - OpenAPI specs section in llms.txt",
+    "use_with_ai_page": "https://docs.pinecone.io/integrations/ai-coding-tools.md",
+    "agents_md_or_rules": "yes - https://docs.pinecone.io/AGENTS-PYTHON.md and AGENTS-JAVASCRIPT.md; agent skills library"
+  },
+  "time_to_first_call_minutes": 5,
+  "time_to_first_call_notes": "Signup + email verify, then CLI login and key mint are agent-driven.",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "agent_friendliness_justification": "Browser-login CLI that mints keys, Admin API/service accounts, published AGENTS.md files and plugins for every major agent; held back by a key-in-env local MCP with no hosted OAuth option.",
+  "best_practice": "Published AGENTS-PYTHON.md / AGENTS-JAVASCRIPT.md at the docs root plus a 'Connect to Pinecone' embeddable flow that hands a user's API key to a third-party app.",
+  "biggest_gap": "Main MCP is local npx with a raw API key; no remote OAuth MCP, so web agents (Claude.ai/ChatGPT) cannot connect without a pasted key.",
+  "sources": [
+    "https://docs.pinecone.io/llms.txt",
+    "https://docs.pinecone.io/_llms/pinecone-database.txt",
+    "https://docs.pinecone.io/integrations/ai-coding-tools.md",
+    "https://docs.pinecone.io/guides/operations/mcp-server.md",
+    "https://docs.pinecone.io/reference/cli/quickstart.md",
+    "https://docs.pinecone.io/reference/cli/authentication.md",
+    "https://docs.pinecone.io/reference/cli/command-reference.md",
+    "https://docs.pinecone.io/guides/projects/manage-api-keys.md",
+    "https://docs.pinecone.io/integrations/build-integration/connect-your-users-to-pinecone.md",
+    "https://docs.pinecone.io/guides/nexus/mcp-server.md"
+  ]
+}

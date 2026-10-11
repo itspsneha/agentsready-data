@@ -1,0 +1,66 @@
+{
+  "company": "PayPal",
+  "domain": "paypal.com",
+  "key_path": [
+    "create a PayPal account (or log in) at developer.paypal.com - email + password, email confirmation; PayPal typically also verifies a phone number",
+    "Developer Dashboard > Apps & Credentials (Sandbox): a Default Application already exists",
+    "copy sandbox client_id + client_secret",
+    "POST api-m.sandbox.paypal.com/v1/oauth2/token with client_credentials to get an access token (agent can do this)",
+    "live: PayPal Business account required (business verification); US-only testing on a personal developer account"
+  ],
+  "human_gates": {
+    "sandbox_keys": [
+      "email_verification",
+      "phone_otp (likely, PayPal account security)",
+      "captcha (possible on paypal.com signup)"
+    ],
+    "live": [
+      "kyc_business_verification"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no official CLI",
+    "oauth_dcr_for_mcp": "yes - mcp.paypal.com and mcp.sandbox.paypal.com both expose registration_endpoint /register with PKCE S256",
+    "provisioning_api_mints_keys": "partial - client_credentials exchange turns app credentials into short-lived access tokens; apps themselves created in Dashboard",
+    "scoped_restricted_keys": "partial - app-level feature scopes in Apps & Credentials",
+    "test_mode_sandbox": "yes - full sandbox with auto-created sandbox business/personal accounts and default app",
+    "free_tier": "yes - sandbox free"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (invoices, orders, subscriptions, disputes, etc. via agent toolkit)",
+    "remote": {
+      "url": "https://mcp.paypal.com (prod) / https://mcp.sandbox.paypal.com (sandbox); paths /sse and /http, /mcp also responds",
+      "transport": "SSE and streamable HTTP",
+      "auth": "OAuth with DCR (login with PayPal account)"
+    },
+    "local": "npx -y @paypal/mcp --tools=all with PAYPAL_ACCESS_TOKEN + PAYPAL_ENVIRONMENT=SANDBOX",
+    "one_click": [
+      "none found; docs show mcp-remote configs for Claude Desktop/Cursor"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developer.paypal.com/llms.txt (sectioned index pointing to per-section llms.txt files)",
+    "markdown_pages": "yes - append .md (e.g. /ai-tools/mcp-server.md)",
+    "openapi": "https://github.com/paypal/paypal-rest-api-specifications",
+    "other": "AI resources hub /ai-tools/get-started, Agent toolkit, LLM integration guide"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 8,
+    "fully_autonomous_possible": false
+  },
+  "agent_friendliness_score": 7,
+  "score_justification": "Sandbox remote MCP with OAuth-DCR and a pre-created default sandbox app are great, but getting there needs a full PayPal consumer-grade account signup.",
+  "best_practice": "Separate sandbox MCP host (mcp.sandbox.paypal.com) so agents can be pointed at test data by URL alone.",
+  "biggest_gap": "Local MCP needs a raw OAuth access token that expires (~hours), forcing manual refresh; no CLI/device login.",
+  "sources": [
+    "https://developer.paypal.com/llms.txt",
+    "https://developer.paypal.com/get-started/llms.txt",
+    "https://developer.paypal.com/developer-resources/llms.txt",
+    "https://developer.paypal.com/ai-tools/mcp-server.md",
+    "https://developer.paypal.com/ai-tools/get-started.md",
+    "https://developer.paypal.com/api/rest.md",
+    "https://mcp.paypal.com/.well-known/oauth-authorization-server",
+    "https://mcp.sandbox.paypal.com/.well-known/oauth-authorization-server"
+  ]
+}

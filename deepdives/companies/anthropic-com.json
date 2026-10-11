@@ -1,0 +1,62 @@
+{
+  "company": "Anthropic",
+  "domain": "anthropic.com",
+  "key_path": [
+    "Sign up at platform.claude.com (email magic link or Google)",
+    "Verify email (magic link)",
+    "Phone verification by SMS to claim the one-time $5 credit (optional per support article; VoIP numbers rejected)",
+    "Add a card and buy prepaid credits (minimum $5), which the API needs to serve requests",
+    "Settings > API keys > Create key (pick personal or service-account key, expiration, workspace)",
+    "OR skip the key: `ant auth login` (browser OAuth, `--no-browser` for headless) and call the API with a workspace-scoped token"
+  ],
+  "human_gates": [
+    "email_verification",
+    "credit_card_required",
+    "phone_otp (only for the free-credit claim)"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "yes. `ant auth login` runs browser OAuth against the Console and stores a workspace-scoped token, so 'call the API without creating or managing an API key'. `--no-browser` handles remote hosts, `--scope org:admin` gives an admin profile, and named profiles are supported",
+    "oauth_dynamic_client_registration": "no public DCR for the API (the CLI uses a first-party client_id)",
+    "provisioning_api_mints_keys": "no. The docs say outright that the Admin API 'can't ... give you a key to call the Claude API with'. Admin keys list, update and disable keys only. Workload Identity Federation issues short-lived credentials for workloads",
+    "scoped_keys": "yes. Personal, service-account and workspace keys, workspace scoping, expiration",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "small one-time $5 after phone verification (support article; may be stale), otherwise prepaid"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://platform.claude.com/docs/mcp (serverInfo 'anthropic-docs') and https://code.claude.com/docs/mcp ('Claude Code Docs')",
+      "transport": "streamable HTTP",
+      "auth": "none",
+      "scope": "docs search. Found by probing; not listed in llms.txt"
+    },
+    "product_mcp": "none for Console or account operations. Anthropic consumes MCP (MCP connector, MCP tunnels, Managed Agents)",
+    "local_package": "none",
+    "one_click_install": "none found for its own docs MCP"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://platform.claude.com/llms.txt (docs.anthropic.com and docs.claude.com serve the same file)",
+    "llms_full_txt": "https://platform.claude.com/llms-full.txt",
+    "markdown_pages": "yes, append .md (with YAML front-matter)",
+    "openapi": "no public spec URL found (SDKs and the ant CLI are generated)",
+    "agents_md_or_rules": "claude-api skill / Agent Skills; CLI scripting page covers use from Claude Code"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "`ant auth login` gives an agent keyless, workspace-scoped OAuth (headless too), but there is prepaid billing, no key-minting API and no product MCP.",
+  "best_practice": "A keyless CLI OAuth login (`ant auth login --no-browser`) that issues a workspace-scoped token, so an agent never handles a long-lived secret.",
+  "biggest_gap": "Credits must be bought before the first call, and the Admin API deliberately can't mint usable keys.",
+  "notes_out_of_date": "Third-party guides still describe the $5 phone-claim credit; check before relying on it.",
+  "sources": [
+    "https://platform.claude.com/llms.txt",
+    "https://platform.claude.com/docs/en/get-api-key.md",
+    "https://platform.claude.com/docs/en/get-started.md",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart.md",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/authentication.md",
+    "https://platform.claude.com/docs/mcp",
+    "https://code.claude.com/docs/mcp",
+    "https://support.anthropic.com/en/articles/8994925-how-do-i-claim-my-free-credits",
+    "https://dev.classmethod.jp/en/articles/claude-console-buy-credit-create-api-key/"
+  ]
+}

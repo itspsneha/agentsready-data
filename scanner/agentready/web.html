@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent-Ready Checker</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#16181d;--muted:#5d6370;--line:#e4e4e0;--accent:#2f5bea;--good:#1f8a4c;--bad:#c2412d;--warn:#b7791f;}
+@media (prefers-color-scheme:dark){:root{--bg:#111316;--card:#1a1d22;--ink:#eceef2;--muted:#9aa1ad;--line:#2b2f36;--accent:#7b9bff;--good:#4cc27e;--bad:#ef7a62;--warn:#e0a84a;}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:860px;margin:0 auto;padding:40px 16px 80px}
+h1{font-size:28px;margin:0 0 4px;letter-spacing:-.01em}p.sub{color:var(--muted);margin:0 0 24px}
+form{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text]{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-size:16px}
+button{padding:12px 18px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;font-size:15px;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+label.opt{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:14px;width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:18px}
+.head{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.score{font-size:56px;font-weight:700;line-height:1}.score small{font-size:18px;color:var(--muted);font-weight:500}
+.lvl{display:inline-block;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-weight:600;font-size:13px}
+.pillars{display:grid;grid-template-columns:110px 1fr 54px;gap:8px 12px;align-items:center;margin-top:8px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.checks{list-style:none;padding:0;margin:0}.checks li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.checks li:first-child{border-top:0}.tag{font-size:12px;font-weight:700;min-width:44px}.pass{color:var(--good)}.fail{color:var(--bad)}
+.pts{color:var(--muted);font-variant-numeric:tabular-nums;min-width:30px}.fix{color:var(--muted);font-size:13px}
+h2{font-size:16px;margin:0 0 10px}.muted{color:var(--muted)}pre{white-space:pre-wrap;font-size:13px;margin:0}
+.err{color:var(--bad)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Agent-Ready Checker</h1>
+  <p class="sub">Score any website on how easily AI agents can read it, connect to it and get credentials. ARS v1, 100 points.</p>
+  <form id="f">
+    <input id="d" type="text" placeholder="yourcompany.com" autocomplete="off" required>
+    <button id="go">Check</button>
+    <label class="opt"><input id="agent" type="checkbox"> Also run a Claude agent audit of the signup path (slower, needs an Anthropic key on the server)</label>
+  </form>
+  <div id="out"></div>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let rubric = [];
+fetch("/api/rubric").then(r => r.json()).then(j => rubric = j);
+$("#f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const d = $("#d").value.trim(); if (!d) return;
+  $("#go").disabled = true;
+  $("#out").innerHTML = `<div class="card muted">Scanning ${esc(d)} like an agent would (15 to 40 seconds${$("#agent").checked ? ", plus a few minutes for the audit" : ""})…</div>`;
+  try {
+    const r = await fetch(`/api/check?domain=${encodeURIComponent(d)}&agent=${$("#agent").checked ? 1 : 0}`);
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || r.status);
+    render(j);
+  } catch (err) { $("#out").innerHTML = `<div class="card err">${esc(err.message)}</div>`; }
+  $("#go").disabled = false;
+});
+function render(j) {
+  const s = j.result, scan = j.scan;
+  const pills = Object.keys(s.pillars).map(p => `<span>${p}</span><span class="bar"><i style="width:${100*s.pillars[p]/s.pillar_max[p]}%"></i></span><span class="muted">${s.pillars[p]}/${s.pillar_max[p]}</span>`).join("");
+  const checks = rubric.map(c => `<li><span class="tag ${s.passes[c.id] ? "pass" : "fail"}">${s.passes[c.id] ? "PASS" : "FAIL"}</span><span class="pts">${c.points}</span><span>${esc(c.label)}${s.passes[c.id] ? "" : `<div class="fix">${esc(c.fix)}</div>`}</span></li>`).join("");
+  const bench = s.percentile != null ? `<div class="muted">Beats ${s.percentile}% of ${s.benchmark_n} benchmarked companies</div>` : "";
+  const found = [
+    scan.llms_txt && `llms.txt (${scan.llms_txt})`, scan.openapi_url && `OpenAPI: ${scan.openapi_url}`,
+    ...(scan.mcp_endpoints || []).map(u => `MCP: ${u}`), scan.docs_url && `Docs: ${scan.docs_url}`,
+    scan.robots_blocked_bots?.length && `robots.txt blocks: ${scan.robots_blocked_bots.join(", ")}`,
+    scan.agent_blocked && "Homepage challenges or blocks AI user-agents"].filter(Boolean);
+  let audit = "";
+  if (j.audit) audit = `<div class="card"><h2>Agent audit (Claude)</h2><pre>${esc(JSON.stringify(j.audit, null, 2))}</pre></div>`;
+  $("#out").innerHTML = `
+  <div class="card"><div class="head"><div class="score">${s.score}<small>/100</small></div>
+    <div><div style="font-size:20px;font-weight:600">${esc(j.domain)}</div><span class="lvl">${s.level} ${s.level_name}</span>${bench}</div></div>
+    <div class="pillars" style="margin-top:18px">${pills}</div></div>
+  <div class="card"><h2>Top fixes</h2><ol>${s.top_fixes.map(f => `<li><b>+${f.points}</b> ${esc(f.check)}: <span class="muted">${esc(f.fix)}</span></li>`).join("")}</ol></div>
+  <div class="card"><h2>What we found</h2>${found.length ? `<ul>${found.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p class="muted">No agent-facing entry points found.</p>`}</div>
+  <div class="card"><h2>All checks</h2><ul class="checks">${checks}</ul></div>${audit}`;
+}
+</script>
+</body>
+</html>

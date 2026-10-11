@@ -1,0 +1,57 @@
+{
+  "company": "Together AI",
+  "domain": "together.ai",
+  "key_path": [
+    "Sign up at together.ai > Get Started using Google or GitHub OAuth (no email/password)",
+    "Add a payment method and buy at least $15 of credits (no free trial; fully prepaid)",
+    "Project > Settings > API keys > Create API Key (project-scoped, optional expiry)",
+    "export TOGETHER_API_KEY and call the OpenAI-compatible endpoint"
+  ],
+  "human_gates": [
+    "credit_card_required"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "no. The Together CLI and Together Link read TOGETHER_API_KEY",
+    "oauth_dynamic_client_registration": "no",
+    "provisioning_api_mints_keys": "no documented key-mint API (only GET whoami to identify a key's project/org)",
+    "scoped_keys": "yes. Project-scoped keys, RBAC roles, expiration dates",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "no. A $15 minimum first purchase"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://docs.together.ai/mcp",
+      "transport": "streamable HTTP",
+      "auth": "none"
+    },
+    "product_mcp": "none",
+    "local_package": "none",
+    "one_click_install": "Skills install via `npx skills add togethercomputer/skills`, the Claude Code plugin marketplace, a Cursor plugin manifest and a Gemini extension"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.together.ai/llms.txt",
+    "llms_full_txt": "https://docs.together.ai/llms-full.txt",
+    "markdown_pages": "yes (.md); each page has a 'fetch llms.txt' agent header",
+    "openapi": "https://docs.together.ai/openapi.yaml",
+    "agents_md_or_rules": "12 Agent Skills (togethercomputer/skills); 'Coding agent setup' page"
+  },
+  "time_to_first_call_minutes": 7,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "score_justification": "Great coding-agent docs (skills, docs MCP, OpenAPI), but a $15 card paywall before any call and no agent-native auth or product MCP.",
+  "best_practice": "A 'Coding agent setup' page that ships skills and a docs MCP together, with install commands for every major agent.",
+  "biggest_gap": "No free tier: a $15 prepaid card purchase is required before the first API call.",
+  "notes_out_of_date": "LinkedIn sign-in discontinued (docs note).",
+  "sources": [
+    "https://docs.together.ai/llms.txt",
+    "https://docs.together.ai/docs/agent-skills.md",
+    "https://docs.together.ai/docs/account-management.md",
+    "https://docs.together.ai/docs/api-keys-authentication.md",
+    "https://docs.together.ai/docs/billing-credits.md",
+    "https://docs.together.ai/reference/cli/getting-started.md",
+    "https://docs.together.ai/docs/togetherlink.md",
+    "https://docs.together.ai/openapi.yaml",
+    "https://docs.together.ai/mcp"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "company": "Flipkart",
+  "domain": "flipkart.com",
+  "key_path": [
+    "Register as a seller at seller.flipkart.com (phone OTP, email, GSTIN/PAN, bank account, address verification).",
+    "Seller Dashboard -> Manage Profile -> Developer Access -> create Self Access Application (client_id/secret).",
+    "client_credentials grant at api.flipkart.net -> access token (~60-day expiry) -> call Seller API v3.",
+    "Third-party developers instead: register on Partner Dashboard as 'API Partner' -> Flipkart verifies within ~72h -> create Third Party application -> authorization_code flow with each seller."
+  ],
+  "human_gates": [
+    "phone_otp",
+    "email_verification",
+    "kyc_business_verification",
+    "manual_approval",
+    "partner_application"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no",
+    "oauth_dcr_for_mcp": "no (no MCP)",
+    "sandboxes": "a sandbox environment is referenced in docs for partners; not self-serve",
+    "scoped_tokens": "OAuth2 client_credentials / authorization_code tokens",
+    "free_tier": "free API for registered sellers",
+    "evidence": "https://seller.flipkart.com/api-docs/FMSAPI.html"
+  },
+  "mcp": {
+    "official": false,
+    "remote": [],
+    "local": [],
+    "types": [],
+    "directories": "Not in Claude directory (404). Only community/3rd-party MCPs (ron2111/flipkart-seller-mcp, Bright Data scraping MCP).",
+    "agentic_commerce_protocols": [
+      "Google UCP early adopter: Gemini/AI Mode 'Buy' button pilot in India from Oct 2026 (hands off to Flipkart checkout) - reported",
+      "AI storefronts on ChatGPT/Perplexity/Gemini reported in progress (Apr 2026)"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "no - flipkart.com/llms.txt 404",
+    "markdown_pages": "no (Sphinx HTML docs)",
+    "openapi": "Swagger-style API reference for Seller API v3",
+    "build_with_ai": "no",
+    "robots_ai_stance": "no AI-specific user-agent rules"
+  },
+  "time_to_first_call_minutes": 1440,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 3,
+  "score_justification": "A self-access client_credentials path exists, but only after Indian seller KYC; no MCP, no llms.txt, and consumer agentic commerce limited to a Google-run pilot.",
+  "best_practice": "Self-access app with client_credentials for a seller's own account avoids redirect-based OAuth.",
+  "biggest_gap": "No agent surface (MCP/llms.txt) and seller/partner KYC before any credential.",
+  "sources": [
+    "https://seller.flipkart.com/api-docs/FMSAPI.html",
+    "https://www.flipkart.com/robots.txt",
+    "https://www.flipkart.com/llms.txt",
+    "https://claude.com/marketplace/connectors/flipkart",
+    "https://cryptobriefing.com/google-gemini-flipkart-direct-purchases-india/",
+    "https://www.storyboard18.com/amp/digital/google-and-flipkart-to-launch-universal-commerce-platform-soon-ws-l-91935.htm",
+    "https://stellagent.ai/insights/india-agentic-commerce-fintech-payment",
+    "https://glama.ai/mcp/servers/ron2111/flipkart-seller-mcp/tools/flipkart_manage_inventory"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "company": "Adyen",
+  "domain": "adyen.com",
+  "key_path": [
+    "fill the test-account form at adyen.com/signup (company/contact details); Adyen warns a test account does not guarantee approval",
+    "receive login instructions by email, set password and 2FA for the test Customer Area",
+    "Developers > API credentials > create/select web service user (ws_...@Company.X)",
+    "Generate API key (and client key for frontend)",
+    "live: 'apply for live' -> underwriting approval, signed contract, data-security attestation"
+  ],
+  "human_gates": {
+    "test_keys": [
+      "email_verification",
+      "2fa",
+      "manual_approval (form review; sales-led company)"
+    ],
+    "live": [
+      "sales_contact",
+      "kyc_business_verification",
+      "manual_approval"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no",
+    "oauth_dcr_for_mcp": "no - MCP is local, API key only",
+    "provisioning_api_mints_keys": "yes - Management API can create API credentials and generate API keys (needs an existing key with the right roles)",
+    "scoped_restricted_keys": "yes - per-credential roles",
+    "test_mode_sandbox": "yes - separate test environment",
+    "free_tier": "test account free"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (Checkout + Management API subset), labelled alpha on GitHub",
+    "remote": null,
+    "local": "npx -y @adyen/mcp --adyenApiKey=KEY --env=TEST (github.com/Adyen/adyen-mcp)",
+    "one_click": []
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.adyen.com/llms.txt and https://docs.adyen.com/llms-full.txt",
+    "markdown_pages": "yes - append .md; pages carry YAML frontmatter and a 'For LLMs' SDK-version note",
+    "openapi": "https://github.com/Adyen/adyen-openapi",
+    "other": "Documentation and knowledge tools page; Postman collections"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 30,
+    "fully_autonomous_possible": false,
+    "note": "can be days if the test-account request is reviewed"
+  },
+  "agent_friendliness_score": 4,
+  "score_justification": "Excellent agent-readable docs, but enterprise sales-led onboarding, mandatory 2FA and a local-only alpha MCP keep agents out of the first mile.",
+  "best_practice": "Every docs page has a .md twin with machine frontmatter (source_url, last_modified) plus an in-page 'For LLMs' instruction.",
+  "biggest_gap": "No self-serve instant sandbox and no remote/OAuth MCP; MCP docs last modified 2025-06 (looks stale).",
+  "sources": [
+    "https://docs.adyen.com/llms.txt",
+    "https://docs.adyen.com/development-resources/mcp-server.md",
+    "https://docs.adyen.com/development-resources/documentation-tools.md",
+    "https://docs.adyen.com/development-resources/api-credentials.md",
+    "https://docs.adyen.com/get-started-with-adyen.md",
+    "https://www.adyen.com/signup"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "company": "MongoDB Atlas",
+  "domain": "mongodb.com",
+  "key_path": [
+    "Zero-account option: `atlas local setup` (Docker) gives a local deployment + connection string with no signup",
+    "Cloud: `atlas setup` (or `atlas auth register`/`atlas auth login`) opens browser for signup/login (Google/GitHub or email; email verification), creates a free M0 cluster, DB user and IP access list, and loads sample data",
+    "Connection string returned; for Admin API: create a Service Account (OAuth client credentials) in the org, or let an admin create an MCP Configuration that returns client id/secret + https://mcp.mongodb.com"
+  ],
+  "human_gates": [
+    "email_verification",
+    "browser login/consent",
+    "org_owner must enable AI client access for remote MCP (on by default only for orgs created at signup)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: `atlas auth login` browser/one-time-code flow; `atlas setup` end-to-end",
+    "oauth_dcr_for_mcp": "yes for user-delegated: AI clients authorize through Atlas App Connections (OAuth) from the client's marketplace; programmatic uses MCP OAuth client-credentials extension",
+    "provisioning_api_mints_keys": "yes: Admin API service accounts + MCP Configuration API (creates paired ingress/egress service accounts)",
+    "scoped_keys": "yes: Atlas roles per service account / MCP configuration, read-only default, IP access list",
+    "test_dev_instances": "yes: free M0 cluster; local Atlas deployments via Docker",
+    "free_tier": "yes: M0 free forever, no card",
+    "keyless_claimable_dev_mode": "partial: `atlas local` needs no account but is not claimable to cloud"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.mongodb.com (Atlas Managed MCP Server)",
+      "transport": "streamable HTTP",
+      "auth": "OAuth via Atlas App Connections (user-delegated) or OAuth client-credentials (MCP configuration service accounts); mongodb-atlas-mcp-remote npx shim for clients lacking client-credentials"
+    },
+    "local": "npx mongodb-mcp-server (connection string or Atlas service account; read-only mode)",
+    "docs_mcp": "docs are exposed in the MCP ('docs-in-mcp' option on docs pages)",
+    "one_click": "MongoDB MCP Plugin in Claude/Cursor/Gemini marketplaces"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://www.mongodb.com/docs/llms.txt (with a 'How agents should use this file' section, per-product llms.txt, Atlas CLI split into 5 parts)",
+    "llms_full_txt": "none at root (404); product-level split files",
+    "md_pages": "yes, .md with ?tabs= / ?allTabs=true params",
+    "openapi": "https://www.mongodb.com/docs/api/doc/atlas-admin-api-v2.json",
+    "agent_skills": "MongoDB Agent Skills (https://www.mongodb.com/docs/agent-skills.md)",
+    "use_with_ai_page": "https://www.mongodb.com/docs/build-with-ai.md"
+  },
+  "time_to_first_call_minutes": 7,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "score_justification": "`atlas setup` gives a cluster + creds in one command, local dev needs no account, and there are two clean MCP access models. The cloud path still needs email verification, and remote MCP has an org-admin toggle.",
+  "best_practice": "Separate MCP access models: user-delegated OAuth vs admin-provisioned MCP Configurations with ingress/egress service accounts, so egress creds are never exposed to the agent",
+  "biggest_gap": "Remote MCP access is off by default for existing orgs; several auth concepts to learn (App Connections, service accounts, MCP configs, DB users)",
+  "notes": "`atlas deployments` deprecated since Atlas CLI 1.52.0 in favor of `atlas local` / `atlas clusters`; Remote MCP release notes page says 'TBD'.",
+  "sources": [
+    "https://www.mongodb.com/docs/llms.txt",
+    "https://www.mongodb.com/docs/build-with-ai.md",
+    "https://www.mongodb.com/docs/mcp-server/llms.txt",
+    "https://www.mongodb.com/docs/mcp-server/overview.md",
+    "https://www.mongodb.com/docs/mcp-server/remote-mcp/access-models.md",
+    "https://www.mongodb.com/docs/get-started.md",
+    "https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-1-llms.txt",
+    "https://www.mongodb.com/cloud/atlas/register"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "company": "Cloudflare",
+  "domain": "cloudflare.com",
+  "key_path": [
+    "zero-account: `npx wrangler deploy --temporary` provisions a temporary account, issues Wrangler an API token and prints a claim URL (60-minute lifetime). No human needed",
+    "permanent account (fastest): `stripe projects init` / `stripe projects add cloudflare/...`: Stripe acts as IdP and provisions the Cloudflare account + API token; human accepts ToS (and confirms payment only if needed)",
+    "or classic: sign up at dash.cloudflare.com (email + password, Turnstile, email verification), then `wrangler login` (OAuth browser, scope selection)",
+    "API token: dashboard > My Profile > API Tokens (user) or Manage Account > API Tokens (account-owned), template or custom permissions",
+    "MCP: `claude mcp add --transport http cloudflare https://mcp.cloudflare.com/mcp` then OAuth, or pass an API token as bearer"
+  ],
+  "human_gates": [
+    "none for temporary accounts",
+    "terms acceptance (claim / Stripe Projects path)",
+    "email_verification + captcha (Turnstile) on classic dashboard signup",
+    "credit_card only for paid products"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `wrangler login` OAuth browser flow with selectable scopes (localhost callback, not device code)",
+    "mcp_oauth_dcr": "yes: https://mcp.cloudflare.com/register (also on per-product servers, e.g. bindings.mcp.cloudflare.com/register)",
+    "provisioning_api_mints_keys": "yes: API tokens (user and account-owned) can be created via the API by a token with token-write permission. Stripe Projects protocol provisions account + token for agents (2026-04-30); Cloudflare co-designed auth.md for agent account provisioning",
+    "scoped_tokens": "yes: very fine-grained per-permission and per-zone/account tokens with IP and TTL filters",
+    "free_tier": "yes (Workers free plan), no card",
+    "claimable_anonymous": "yes: `wrangler deploy --temporary` (blog 2026-06-19) creates a temp account + API token + claim URL. Covers Workers, sites, APIs, databases and bindings. Auto-deleted after 60 minutes unless claimed. Wrangler advertises the flag to unauthenticated agents"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.cloudflare.com/mcp",
+      "transport": "streamable_http (2026-07-28 spec)",
+      "auth": "OAuth (DCR) or user/account API token as bearer"
+    },
+    "remote_others": "docs.mcp.cloudflare.com/mcp (docs, no auth), containers., browser., dex., casb., bindings.mcp.cloudflare.com, agents.cloudflare.com/mcp (Agents SDK docs)",
+    "local": "not needed; Cloudflare Skills plugin bundles the MCP servers",
+    "type": "product (the whole 2,500+ endpoint API via 2 code-mode tools) + docs MCP",
+    "one_click": "Cloudflare Skills plugin via marketplaces; per-agent guides at developers.cloudflare.com/agent-setup/ (Claude Code, Codex, Cursor, Copilot, OpenCode, Devin, VS Code...)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.cloudflare.com/llms.txt (hub linking per-product llms.txt)",
+    "llms_full_txt": "https://developers.cloudflare.com/llms-full.txt (200)",
+    "markdown_pages": "yes: /index.md on every page, 'Copy as Markdown' / 'View as Markdown' and an 'Agent setup' link on each page",
+    "openapi": "public Cloudflare API OpenAPI schemas (github.com/cloudflare/api-schemas)",
+    "use_with_ai_page": "https://developers.cloudflare.com/agent-setup/"
+  },
+  "time_to_first_call_minutes": 1,
+  "fully_autonomous_possible": true,
+  "autonomy_note": "Temporary account gives a real API token with no human. A permanent account via Stripe Projects needs only ToS acceptance (~3 min).",
+  "agent_friendliness_score": 10,
+  "score_justification": "The only company here where an agent gets a real API token and deploys with zero human steps. It also has a full-API code-mode MCP with DCR or token auth, fine-grained tokens that can be minted via API, and agent-provisioned accounts via Stripe.",
+  "best_practice": "`wrangler deploy --temporary`: a temporary account + scoped token + claim URL, advertised by the CLI itself when an agent is unauthenticated",
+  "biggest_gap": "The classic dashboard signup is still behind a JS challenge, Turnstile and email verification, and the many separate product MCP servers fragment discovery (mitigated by the unified mcp.cloudflare.com)",
+  "sources": [
+    "https://developers.cloudflare.com/llms.txt",
+    "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/",
+    "https://developers.cloudflare.com/agent-setup/index.md",
+    "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/index.md",
+    "https://blog.cloudflare.com/temporary-accounts",
+    "https://blog.cloudflare.com/agents-stripe-projects",
+    "https://mcp.cloudflare.com/.well-known/oauth-authorization-server",
+    "https://bindings.mcp.cloudflare.com/.well-known/oauth-authorization-server",
+    "https://dash.cloudflare.com/sign-up"
+  ]
+}

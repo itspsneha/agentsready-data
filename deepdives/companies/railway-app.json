@@ -1,0 +1,61 @@
+{
+  "company": "Railway",
+  "domain": "railway.app (now railway.com)",
+  "key_path": [
+    "zero-account compute: `ssh railway.new` gives a free VM + preview URL with no account or card, keyed by SSH key; claim within 24h",
+    "`curl -fsSL agents.railway.com | sh` (CLI + agent config) then `railway login`: browser flow (device code over SSH) that signs in OR creates the account. `railway up -y` signs up and deploys in one step",
+    "optional: connect GitHub at railway.com/verify for the Full Trial (unverified = Limited Trial with restricted outbound network)",
+    "API token: railway.com/account/tokens (account / workspace) or project settings (project token)",
+    "MCP: `claude mcp add railway --transport http https://mcp.railway.com` then OAuth (DCR)"
+  ],
+  "human_gates": [
+    "browser approval / device code",
+    "email_verification if email login (magic link)",
+    "trial verification via GitHub account age (automated, else Limited Trial)"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `railway login` with device code over SSH; login doubles as signup",
+    "mcp_oauth_dcr": "yes: registration_endpoint https://backboard.railway.com/oauth/register, and client_id_metadata_document_supported=true (CIMD)",
+    "provisioning_api_mints_keys": "partial: 'Login with Railway' OAuth/OIDC for apps (selective workspace/project scopes). Token creation in dashboard; GraphQL API covers resources",
+    "scoped_tokens": "yes: account, workspace and project tokens; OAuth scopes workspace:/project:viewer|member|admin with per-resource selective consent",
+    "free_tier": "yes: Free Trial $5 / 30 days with no card, then Free $1/mo",
+    "claimable_anonymous": "yes (compute): `ssh railway.new` VM, 60 min to build plus 24h to claim; emits a JSON manifest with preview URL and claim link for agents. No anonymous app deploy to a project"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.railway.com",
+      "transport": "streamable_http",
+      "auth": "OAuth (DCR + CIMD, PKCE S256)"
+    },
+    "local": "local MCP installed by the agents setup script (Railway CLI-based)",
+    "type": "product (projects, services, deployments, variables, logs)",
+    "one_click": "`curl agents.railway.com | sh` configures agents; MCP server card at /.well-known/mcp/server-card.json; guides for Claude, Cursor, Codex, Copilot, Windsurf, Cline, Devin"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://railway.com/llms.txt and https://docs.railway.com/llms.txt",
+    "llms_full_txt": "https://docs.railway.com/llms-full.txt",
+    "markdown_pages": "yes: append .md; railway.com/index.md serves an agent briefing",
+    "openapi": "https://railway.com/openapi.json (OpenAPI 3.1 for the GraphQL entrypoint + OAuth); GraphQL at backboard.railway.com/graphql/v2",
+    "use_with_ai_page": "https://railway.com/agents.md, https://railway.com/auth.md; discovery docs: /.well-known/ai-catalog.json (ARD), /.well-known/api-catalog (RFC 9727), template deploy manifests"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": true,
+  "autonomy_note": "Autonomous only for the no-signup VM (ssh railway.new). An API credential needs one browser approval.",
+  "agent_friendliness_score": 9,
+  "score_justification": "Has the richest machine-readable discovery (ai-catalog, api-catalog, MCP server card, auth.md), DCR+CIMD OAuth with selective scopes, login-as-signup and a no-account VM. Anonymous app deploys are missing.",
+  "best_practice": "auth.md + RFC 9727 api-catalog + RFC 9728/8414 metadata: one 401 from the MCP teaches a client the whole auth chain, and the doc tells agents which credential type to use",
+  "biggest_gap": "No anonymous or claimable project deploy (only a VM). Unverified trials get restricted networking. Tokens can only be minted in the dashboard",
+  "sources": [
+    "https://railway.com/llms.txt",
+    "https://docs.railway.com/llms.txt",
+    "https://railway.com/auth.md",
+    "https://railway.com/mcp.md",
+    "https://railway.com/free-vm.md",
+    "https://railway.com/pricing.md",
+    "https://docs.railway.com/pricing/free-trial.md",
+    "https://railway.com/login",
+    "https://mcp.railway.com/.well-known/oauth-protected-resource",
+    "https://backboard.railway.com/.well-known/oauth-authorization-server"
+  ]
+}

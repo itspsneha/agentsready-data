@@ -1,0 +1,59 @@
+{
+  "company": "Render",
+  "domain": "render.com",
+  "key_path": [
+    "human signs up at dashboard.render.com/register (GitHub/GitLab/Google/email)",
+    "if email signup: verify email",
+    "API key: dashboard.render.com/u/settings#api-keys > create key (account-wide, non-expiring), set RENDER_API_KEY. Or `render login`: browser 'Authorize CLI' generates an expiring CLI token",
+    "MCP: Render plugin for Claude Code/Codex/Cursor (OAuth), or `claude mcp add --transport http render https://mcp.render.com/mcp --header \"Authorization: Bearer $RENDER_API_KEY\"`",
+    "set the active workspace (MCP/CLI prompt)"
+  ],
+  "human_gates": [
+    "email_verification (email signup)",
+    "browser approval",
+    "credit_card effectively needed to keep Free services alive past limits (Free services suspend / builds disabled without a payment method)"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes-ish: `render login` opens the dashboard 'Authorize CLI' page and saves a CLI token (browser confirm, not a device code)",
+    "mcp_oauth_dcr": "no: AS metadata at api.render.com has no registration_endpoint, so OAuth works only for pre-registered clients (Claude Code, Claude Desktop, Codex, Cursor, Pi per agents.md)",
+    "provisioning_api_mints_keys": "no API to mint keys. REST API (OpenAPI) for resources only",
+    "scoped_tokens": "no: API keys grant access to all workspaces of the user and do not expire",
+    "free_tier": "yes (Free instances; payment method needed to avoid suspension at limits)",
+    "claimable_anonymous": "no"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.render.com/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth (pre-registered clients) or API key bearer"
+    },
+    "local": "open-source render-oss/render-mcp-server (binary/Docker)",
+    "type": "product (services, deploys, env vars, Postgres queries, logs, metrics)",
+    "one_click": "official plugins for Claude Code, Codex and Cursor; Claude Desktop connector"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://render.com/llms.txt (routing: setup goes to agents.md, tasks go to agents/tasks.md)",
+    "llms_full_txt": "https://render.com/llms-full.txt (200)",
+    "markdown_pages": "yes: https://render.com/docs/{slug}.md",
+    "openapi": "https://api-docs.render.com/openapi/render-public-api-1.json; https://api-docs.render.com/llms.txt",
+    "use_with_ai_page": "https://render.com/agents.md (idempotent setup procedure plus per-agent setup contracts); public docs search API https://render.com/api/agent/docs-search?query=; skills index https://render.com/.well-known/agent-skills/index.json"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Agent docs are top-tier (agents.md procedure, docs-search API, skills well-known index), but there is no anonymous or claim path, no DCR, no scoped keys and no API to mint keys.",
+  "best_practice": "agents.md tells the agent to keep working while waiting for the human ('Do not stop working while you wait'), references secrets only by env-var name, and explains the OAuth-expiry vs API-key trade-off",
+  "biggest_gap": "Unscoped, non-expiring, account-wide API keys created only in the dashboard, plus no DCR, mean a human must copy a god-mode key for any non-blessed agent",
+  "sources": [
+    "https://render.com/llms.txt",
+    "https://render.com/agents.md",
+    "https://render.com/docs/mcp-server.md",
+    "https://render.com/docs/cli.md",
+    "https://render.com/docs/api.md",
+    "https://render.com/docs/free.md",
+    "https://mcp.render.com/.well-known/oauth-protected-resource",
+    "https://api.render.com/.well-known/oauth-authorization-server",
+    "https://dashboard.render.com/register"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "company": "ElevenLabs",
+  "domain": "elevenlabs.io",
+  "key_path": [
+    "Sign up at elevenlabs.io/app/sign-up (email+password or Google/Apple OAuth)",
+    "Verify email (email signups only)",
+    "Free plan active immediately (10k credits/month, no card)",
+    "Settings > API keys > Create (optional endpoint scope, credit quota, IP allowlist, expiry)",
+    "OR skip the key: connect https://api.elevenlabs.io/v1/mcp with OAuth, or run `elevenlabs auth login`"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "yes. `elevenlabs auth login` does browser OAuth and stores the token in the OS keyring",
+    "oauth_dynamic_client_registration": "partial. The hosted MCP uses OAuth with a Client ID Metadata Document (client_id_metadata_document_supported=true). No registration_endpoint, so no classic RFC 7591 DCR. Protected-resource metadata exposes scopes: convai_read/write, text_to_speech, speech_history_read, flows, image_video_generation, voice_generation",
+    "provisioning_api_mints_keys": "yes. Service Accounts API: create a service account, then POST its API keys; there is also an API to disable keys",
+    "scoped_keys": "yes. Endpoint scope restriction, per-key credit quota, IP allowlist, 15-minute to 30-day expiry",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "yes. Free tier with 10k credits/month"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://elevenlabs.io/docs/_mcp/server",
+      "transport": "streamable HTTP",
+      "auth": "none"
+    },
+    "product_mcp": {
+      "url": "https://api.elevenlabs.io/v1/mcp (plus EU/IN/SG residency URLs)",
+      "transport": "streamable HTTP",
+      "auth": "OAuth (CIMD), workspace selection and scoped consent",
+      "scope": "agent management and creative tools"
+    },
+    "local_package": "uvx elevenlabs-mcp, DEPRECATED (repo archived) in favor of the hosted server",
+    "one_click_install": "listed in the Claude Desktop connector directory (one-click Connect). elevenlabs/plugin bundles the MCP and skills for Cursor, Claude Code and Codex"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://elevenlabs.io/docs/llms.txt (with an 'Instructions for AI Agents' header and per-section llms.txt)",
+    "llms_full_txt": "https://elevenlabs.io/docs/llms-full.txt",
+    "markdown_pages": "yes, append .md",
+    "openapi": "https://elevenlabs.io/docs/openapi.json and /openapi.yaml",
+    "agents_md_or_rules": "elevenlabs/skills plus the plugin, including a 'setup-api-key' skill"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "Free tier with no card, a hosted OAuth MCP in the Claude directory, CLI OAuth, a key-minting API with scoped and quota-capped keys, and full llms/OpenAPI coverage.",
+  "best_practice": "The hosted MCP uses OAuth and scoped consent, so 'no API keys are copied into the client'. They also retired the local key-based server in its favor.",
+  "biggest_gap": "OAuth relies on CIMD only (no DCR), so clients without CIMD support need a key. Email verification is still a human step for email signups.",
+  "notes_out_of_date": "GitHub and Facebook sign-in were removed. The local elevenlabs-mcp repo is archived.",
+  "sources": [
+    "https://elevenlabs.io/docs/llms.txt",
+    "https://elevenlabs.io/docs/agents-platform/operate/hosted-mcp.md",
+    "https://api.elevenlabs.io/.well-known/oauth-protected-resource/v1/mcp",
+    "https://api.us.elevenlabs.io/.well-known/oauth-authorization-server",
+    "https://elevenlabs.io/docs/eleven-agents/operate/cli.md",
+    "https://elevenlabs.io/docs/overview/administration/workspaces/api-keys.md",
+    "https://elevenlabs.io/docs/overview/administration/workspaces/service-accounts.md",
+    "https://elevenlabs.io/docs/overview/administration/account.md",
+    "https://github.com/elevenlabs/elevenlabs-mcp",
+    "https://github.com/elevenlabs/plugin"
+  ]
+}

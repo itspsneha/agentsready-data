@@ -1,0 +1,60 @@
+{
+  "company": "Wise",
+  "domain": "wise.com",
+  "key_path": [
+    "Platform partners: contact Wise sales -> partner onboarding -> Wise issues sandbox client_id/secret and grants Developer Hub access (wise-sandbox.com/developer-hub)",
+    "SMB path: open a Wise Business account (full KYC/KYB) -> Settings > API tokens -> create personal token -> complete 2-step verification",
+    "personal tokens only cover quotes, recipients, transfers, statuses; production funding needs SCA"
+  ],
+  "human_gates": {
+    "platform_api": [
+      "sales_contact",
+      "manual_approval"
+    ],
+    "personal_token": [
+      "kyc_business_verification",
+      "2fa",
+      "email_verification",
+      "phone_otp"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no",
+    "oauth_dcr_for_mcp": "no - no official MCP; mcp.wise.com returns 530",
+    "provisioning_api_mints_keys": "no - client credentials issued by Wise; Developer Hub can rotate/revoke",
+    "scoped_restricted_keys": "partial - personal tokens are limited to a subset of endpoints; partner credentials scoped by integration model",
+    "test_mode_sandbox": "yes - Sandbox V2 at wise-sandbox.com, but partner credentials come from Wise",
+    "free_tier": "no API free tier as such"
+  },
+  "mcp": {
+    "official": false,
+    "type": "none official (community: npx -y @aiwerk/mcp-server-wise using WISE_API_TOKEN)",
+    "remote": null,
+    "local": null,
+    "one_click": []
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.wise.com/llms.txt",
+    "markdown_pages": "yes - .md pages including versioned API reference (api-reference/2026q3/*.md)",
+    "openapi": "yes - generated OpenAPI per version under docs.wise.com/api-reference",
+    "other": "none AI-specific"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 1440,
+    "fully_autonomous_possible": false,
+    "note": "personal token needs a verified business account (days); partner sandbox needs sales onboarding (days-weeks)"
+  },
+  "agent_friendliness_score": 2,
+  "score_justification": "Good machine-readable docs, but every credential path goes through KYC or a sales/implementation team and there is no official MCP.",
+  "best_practice": "Versioned API reference as Markdown (2026q3 / preview / legacy) so agents can pin to the right API version.",
+  "biggest_gap": "No self-serve sandbox credentials and no MCP.",
+  "notes_out_of_date": "Sandbox V1 (sandbox.transferwise.tech) was deprecated on 2026-06-30; older tutorials pointing there are stale. Personal-token docs also link a migration guide to OAuth+mTLS.",
+  "sources": [
+    "https://docs.wise.com/llms.txt",
+    "https://docs.wise.com/guides/developer.md",
+    "https://docs.wise.com/guides/developer/environments.md",
+    "https://docs.wise.com/guides/developer/environments/sandbox-v2-migration.md",
+    "https://docs.wise.com/guides/developer/auth-and-security/personal-api-token.md",
+    "https://glama.ai/mcp/servers/y74gjujwp3"
+  ]
+}

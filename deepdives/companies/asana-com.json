@@ -1,0 +1,58 @@
+{
+  "company": "Asana",
+  "domain": "asana.com",
+  "key_path": [
+    "Sign up at asana.com with Google/Microsoft OAuth or email (email signup sends verification link/code)",
+    "Complete onboarding (creates workspace/org and a first project)",
+    "Open developer console https://app.asana.com/0/my-apps > Create new token (PAT) with description",
+    "Call https://app.asana.com/api/1.0/users/me with Bearer PAT"
+  ],
+  "human_gates": [
+    "email_verification",
+    "admin_approval"
+  ],
+  "human_gates_notes": "Admin approval only if MCP client app is blocked via app management (Enterprise+). For coding-client MCP, human must also create an OAuth app in the developer console (client id/secret, redirect URI) - no DCR.",
+  "agent_native_auth": {
+    "cli_device_login": "no official CLI",
+    "mcp_oauth_dcr": "no for coding clients - docs: V2 server 'requires OAuth 2.0 authentication with a registered client ID and client secret' (well-known lists a /register endpoint, but docs say DCR unsupported; pre-registered for Claude/ChatGPT)",
+    "personal_access_tokens": "yes",
+    "scoped_tokens": "yes - OAuth scopes (e.g. tasks:read); PATs are full-access",
+    "management_api_mints_keys": "no; service accounts on Enterprise",
+    "free_tier_or_sandbox": "yes - Personal (free) plan; developer sandbox available on request"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.asana.com/v2/mcp (beta v1 /sse still listed in Claude directory)",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.0 with pre-registered client id+secret; no PAT bearer"
+    },
+    "local": "none official; 'Command MCP Server' variant documented",
+    "type": "product MCP",
+    "one_click_install": "no - per-client manual config with own OAuth app (Claude Code --client-id/--client-secret, Cursor env vars, Codex via mcp-remote --static-oauth-client-info)",
+    "claude_directory": true,
+    "chatgpt_directory": true
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.asana.com/llms.txt (200, ~73KB)",
+    "llms_full_txt": "https://developers.asana.com/llms-full.txt (returned 429 rate-limit; exists per readme.io pattern - unverified)",
+    "markdown_pages": "yes - .md pages with agentTools.projectIndex frontmatter",
+    "openapi": "https://raw.githubusercontent.com/Asana/openapi/master/defs/asana_oas.yaml (200)",
+    "ai_page": "https://developers.asana.com/docs/mcp-server",
+    "agents_md_or_rules": "not found"
+  },
+  "time_to_first_call_minutes": 5,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "PAT path is easy and docs are agent-readable, but MCP for coding agents requires hand-creating an OAuth app - no DCR, no PAT bearer.",
+  "best_practice": "Markdown docs carry agentTools frontmatter pointing agents back to the llms.txt project index.",
+  "biggest_gap": "MCP v2 forces users to register their own OAuth client (client id/secret + exact redirect URIs) for Claude Code/Cursor/VS Code/Codex.",
+  "sources": [
+    "https://developers.asana.com/llms.txt",
+    "https://developers.asana.com/docs/using-asanas-mcp-server.md",
+    "https://developers.asana.com/docs/connecting-mcp-clients-to-asanas-v2-server",
+    "https://developers.asana.com/docs/personal-access-token.md",
+    "https://mcp.asana.com/.well-known/oauth-protected-resource",
+    "https://raw.githubusercontent.com/Asana/openapi/master/defs/asana_oas.yaml"
+  ]
+}

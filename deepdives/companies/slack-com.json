@@ -1,0 +1,60 @@
+{
+  "company": "Slack",
+  "domain": "slack.com",
+  "key_path": [
+    "Sign up at slack.com/get-started with email (6-digit confirmation code) or Google/Apple OAuth",
+    "Create a workspace (name, first channel) - or join an existing one",
+    "Go to api.slack.com/apps > Create New App > From manifest (agent can write the YAML/JSON manifest with scopes)",
+    "Install to Workspace (OAuth consent; on managed workspaces this becomes an admin approval request)",
+    "Copy Bot User OAuth Token (xoxb-) or User Token (xoxp-) from OAuth & Permissions",
+    "Call https://slack.com/api/auth.test with Bearer token"
+  ],
+  "human_gates": [
+    "email_verification",
+    "admin_approval"
+  ],
+  "human_gates_notes": "Admin approval of apps/MCP clients when app approval is on (common in paid workspaces). Slack CLI login requires pasting a /slackauthticket command into Slack - a human step.",
+  "agent_native_auth": {
+    "cli_device_login": "partial - Slack CLI 'slack login' issues an auth ticket the human pastes into Slack",
+    "mcp_oauth_dcr": "no - docs: 'We do not support SSE-based connections or Dynamic Client Registration'; app must be Marketplace-published or internal",
+    "personal_access_tokens": "no PATs; app bot/user tokens",
+    "scoped_tokens": "yes - fine-grained OAuth scopes",
+    "management_api_mints_keys": "yes - App Manifest API (apps.manifest.create) with app configuration tokens can create apps programmatically",
+    "free_tier_or_sandbox": "yes - free workspace; developer sandboxes via Developer Program"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.slack.com/mcp",
+      "transport": "streamable_http (JSON-RPC 2.0; no SSE)",
+      "auth": "confidential OAuth with registered app client_id/secret (PKCE now supported for desktop); user token scopes"
+    },
+    "local": "none official",
+    "type": "product MCP",
+    "one_click_install": "via partner clients only: Claude.ai, Claude Code, Cursor, Perplexity",
+    "claude_directory": true,
+    "chatgpt_directory": "not listed in Slack's partner list"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.slack.dev/llms.txt (200; api.slack.com/llms.txt also 200)",
+    "llms_full_txt": "yes - https://docs.slack.dev/llms-full.txt plus language-split llms-full-platform/js/python/java/deno.txt",
+    "markdown_pages": "yes - append .md to any docs.slack.dev URL; llms-sitemap.md index",
+    "openapi": "legacy community spec only (slackapi/slack-api-specs, not maintained)",
+    "ai_page": "https://docs.slack.dev/ai/slack-mcp-server/",
+    "agents_md_or_rules": "not found"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Best-in-class docs for LLMs and manifest-driven app creation, but tokens require an app install and MCP is locked to directory/internal apps with no DCR.",
+  "best_practice": "Language-split llms-full files (platform + JS/Python/Java/Deno) so agents load only the SDK they need.",
+  "biggest_gap": "No personal token and no DCR: every agent needs a registered Slack app (and often admin approval) before it can touch the API or MCP.",
+  "sources": [
+    "https://docs.slack.dev/llms.txt",
+    "https://docs.slack.dev/ai/slack-mcp-server/",
+    "https://docs.slack.dev/ai/slack-mcp-server.md",
+    "https://mcp.slack.com/.well-known/oauth-protected-resource",
+    "https://mcp.slack.com/.well-known/oauth-authorization-server",
+    "https://api.slack.com/llms.txt"
+  ]
+}

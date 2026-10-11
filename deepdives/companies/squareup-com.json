@@ -1,0 +1,65 @@
+{
+  "company": "Square",
+  "domain": "squareup.com",
+  "key_path": [
+    "squareup.com/signup?v=developers: name, email, password, country, accept terms, business name, application name",
+    "verify email (standard Square account)",
+    "Developer Console opens the new app automatically",
+    "toggle Sandbox, click 'Show' on Sandbox access token, copy",
+    "call connect.squareupsandbox.com",
+    "production payments: activate account at squareup.com/activation (identity/business + bank)"
+  ],
+  "human_gates": {
+    "sandbox_token": [
+      "email_verification"
+    ],
+    "live": [
+      "kyc_business_verification"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no official CLI login",
+    "oauth_dcr_for_mcp": "yes - mcp.squareup.com advertises registration_endpoint /register, granular Square scopes (CUSTOMERS_READ, ITEMS_READ ...) in protected-resource metadata",
+    "provisioning_api_mints_keys": "no - personal tokens from Developer Console; OAuth API for third-party sellers",
+    "scoped_restricted_keys": "partial - OAuth tokens are scoped; personal access tokens are full access",
+    "test_mode_sandbox": "yes - Sandbox token per application, test seller accounts",
+    "free_tier": "yes - developer account and sandbox free"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP covering the full Square API (generic API-call tools)",
+    "remote": {
+      "url": "https://mcp.squareup.com/mcp",
+      "transport": "streamable HTTP (or npx mcp-remote)",
+      "auth": "OAuth with DCR and granular scopes; production only"
+    },
+    "local": "npx square-mcp-server start with ACCESS_TOKEN + SANDBOX=true (sandbox only via local)",
+    "one_click": [
+      "Claude.ai connector (Enterprise/Teams/Max)",
+      "Goose",
+      "manual configs for Claude Desktop/Cursor"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developer.squareup.com/llms.txt (explicit 'Agent guidance' line) + llms-full.txt",
+    "markdown_pages": "yes - append .md (MDX-flavoured)",
+    "openapi": "github.com/square/connect-api-specification",
+    "other": "none AI-specific beyond MCP"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 5,
+    "fully_autonomous_possible": false
+  },
+  "agent_friendliness_score": 7,
+  "score_justification": "Short signup to a sandbox token and a scoped OAuth-DCR remote MCP, but the remote MCP can't reach Sandbox and there's no CLI/device login.",
+  "best_practice": "Granular OAuth scopes published in the MCP protected-resource metadata, so the user approves only what the agent needs.",
+  "biggest_gap": "Remote MCP is production-only; agents testing safely must fall back to a local server with a full-access token.",
+  "sources": [
+    "https://developer.squareup.com/llms.txt",
+    "https://developer.squareup.com/docs/mcp.md",
+    "https://mcp.squareup.com/.well-known/oauth-authorization-server",
+    "https://mcp.squareup.com/.well-known/oauth-protected-resource",
+    "https://developer.squareup.com/docs/build-basics/access-tokens.md",
+    "https://developer.squareup.com/docs/get-started/create-account-and-application.md"
+  ]
+}

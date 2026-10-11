@@ -1,0 +1,74 @@
+{
+  "company": "Booking.com",
+  "domain": "booking.com",
+  "key_path": [
+    "Consumer agent path (fastest): add Claude connector 'Booking.com' (https://demandapi-mcp.booking.com/v1/mcp/8132308) -> search accommodations with NO authentication -> booking completes on booking.com via link.",
+    "Developer path: become a Managed Affiliate Partner (apply, sign contract).",
+    "Account Manager enables Partner Centre access -> generate Demand API key + X-Affiliate-Id.",
+    "Call sandbox https://demandapi-sandbox.booking.com/3.2 (same credentials as prod) or partner MCP https://demandapi-mcp.booking.com/v1/sp/mcp/ with x-booking-affiliate-id + x-booking-authorization headers."
+  ],
+  "human_gates": [
+    "partner_application",
+    "sales_contact",
+    "manual_approval",
+    "kyc_business_verification"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no",
+    "oauth_dcr_for_mcp": "no - partner MCP uses static affiliate id + API key headers; consumer connector is unauthenticated",
+    "sandboxes": "yes - Demand API sandbox (no separate keys, but requires partner credentials)",
+    "scoped_tokens": "API key tokens per affiliate",
+    "free_tier": "consumer search free; API only via affiliate contract",
+    "evidence": "https://developers.booking.com/demand/docs/getting-started/prerequisites.md ; https://developers.booking.com/mcp-server/docs/implementation-guide"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Booking.com connector (consumer)",
+        "url": "https://demandapi-mcp.booking.com/v1/mcp/8132308",
+        "transport": "streamable HTTP",
+        "auth": "none for search (per docs); our probe from India got CloudFront 403 - likely client/geo filtered"
+      },
+      {
+        "name": "Booking.com partner MCP server",
+        "url": "https://demandapi-mcp.booking.com/v1/sp/mcp/",
+        "transport": "streamable HTTP, stateless",
+        "auth": "x-booking-affiliate-id + x-booking-authorization (Demand API key, no Bearer)"
+      }
+    ],
+    "local": [],
+    "types": [
+      "commerce/search MCP (accommodations_search only; order creation not included)"
+    ],
+    "directories": "Claude directory: 'Booking.com' (Claude Web/Desktop/Mobile/Cowork; docs say NOT Claude Code). ChatGPT: Booking.com app (Apps in ChatGPT launch partner, Oct 2025).",
+    "agentic_commerce_protocols": [
+      "none for in-agent booking; redirect to booking.com"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes - developers.booking.com/llms.txt (large TOC); booking.com/llms.txt 404",
+    "markdown_pages": "yes - developers.booking.com pages available as .md",
+    "openapi": "yes - Demand API 3.2/3.3 OpenAPI",
+    "build_with_ai": "yes - MCP server docs (about, implementation guide) + booking-connector docs",
+    "robots_ai_stance": "booking.com robots.txt has no AI-specific user-agent rules"
+  },
+  "time_to_first_call_minutes": 2,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "score_justification": "Frictionless consumer search connector and agent-ready docs (llms.txt, .md, OpenAPI, MCP guide), but every developer credential requires a managed-affiliate contract and booking cannot be completed in-agent.",
+  "best_practice": "Same MCP backend serves an auth-free consumer connector and a partner-keyed server; tools/list is declared the source of truth per account.",
+  "biggest_gap": "Managed Affiliate contract + Account Manager gate; partner terms reportedly restrict AI use without written approval; no order creation tool.",
+  "sources": [
+    "https://developers.booking.com/mcp-server/docs/about",
+    "https://developers.booking.com/mcp-server/docs/implementation-guide",
+    "https://developers.booking.com/mcp/booking-connector/about",
+    "https://developers.booking.com/llms.txt",
+    "https://developers.booking.com/demand/docs/getting-started/prerequisites.md",
+    "https://developers.booking.com/demand/docs/getting-started/sandbox.md",
+    "https://claude.com/marketplace/connectors/booking",
+    "https://demandapi-mcp.booking.com/v1/mcp/8132308 (probed: 403 CloudFront)",
+    "https://www.booking.com/robots.txt",
+    "https://www.booking.com/llms.txt"
+  ]
+}

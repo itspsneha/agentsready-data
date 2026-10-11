@@ -1,0 +1,60 @@
+{
+  "company": "Vercel",
+  "domain": "vercel.com",
+  "key_path": [
+    "npm i -g vercel@latest",
+    "`vercel signup` (new account) or `vercel login` (existing): OAuth 2.0 Device Flow; human approves in browser with Google / GitHub / Apple / ChatGPT / email",
+    "if signup was by email: verify email (magic link/OTP)",
+    "CLI session token is now usable for the CLI and `vercel api`; for a standalone bearer token: dashboard > Account Settings > Tokens > create scoped token (team scope + expiry)",
+    "MCP: `npx -y add-mcp https://mcp.vercel.com -g` or `vercel mcp --clients \"Claude Code\"`, then OAuth consent in browser"
+  ],
+  "human_gates": [
+    "email_verification (only for email signup; OAuth signup skips it)",
+    "browser consent for device flow / MCP OAuth"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `vercel login` moved to the OAuth 2.0 Device Flow (changelog 2025-09-12); the old email/--github/--oob methods were removed 2026-02-26. `vercel signup` creates an account from the CLI",
+    "mcp_oauth_dcr": "partial: the AS metadata publishes registration_endpoint https://vercel.com/api/login/oauth/register, but docs say Vercel MCP 'only supports AI clients that have been reviewed and approved by Vercel' (client review form). Custom or unknown agents are blocked",
+    "provisioning_api_mints_keys": "no public API documented for minting PATs. Tokens are created in the dashboard. Vercel Connect/OAuth exists for integrations",
+    "scoped_tokens": "yes: access tokens scoped to a team with expiration",
+    "free_tier": "yes: Hobby, no card",
+    "claimable_anonymous": "yes for platforms: Claim Deployments. An agent deploys under its own team, then POST /projects/:id/transfer-request returns a 24h code and the claim URL vercel.com/claim-deployment?code=... The agent operator still needs its own Vercel account, so a solo agent cannot deploy anonymously"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.vercel.com",
+      "transport": "streamable_http (supports 2026-07-28 spec)",
+      "auth": "OAuth (approved clients only); some public docs-search tools work without auth"
+    },
+    "local": "none official; stdio clients use `npx mcp-remote https://mcp.vercel.com`",
+    "type": "product + docs (search docs, manage projects and deployments, logs, Web Analytics, deploy code, purchases)",
+    "one_click": "Cursor deeplink, VS Code `vscode:mcp/install`, Goose deeplink, Devin marketplace, `npx add-mcp` installs into all detected agents, `vercel mcp --clients`"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://vercel.com/llms.txt (agent-oriented index)",
+    "llms_full_txt": "https://vercel.com/docs/llms-full.txt (~10 MB, docs + REST reference)",
+    "markdown_pages": "yes: append .md, plus .graph.md cross-link maps with a 'For AI agents' block on every docs page",
+    "openapi": "https://vercel.com/openapi.json",
+    "use_with_ai_page": "https://vercel.com/get-started.md is an agent-executable onboarding playbook; /docs/agent-resources",
+    "agent_skills_plugin": "`npx plugins add vercel/vercel-plugin`; `npx skills add vercel-labs/agent-skills`"
+  },
+  "time_to_first_call_minutes": 4,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "CLI signup + device flow, add-mcp installer and an agent-executable get-started.md make the path almost all agent-run. The only human step is one browser approval. Point lost because MCP is allow-listed to approved clients and solo agents have no anonymous deploy.",
+  "best_practice": "get-started.md: a playbook written for the agent to execute ('Perform actions yourself... Pause only for user authentication'), plus `vercel signup` so the agent can start account creation itself",
+  "biggest_gap": "MCP OAuth is limited to Vercel-approved clients even though DCR exists, so custom agents and new clients are locked out. Claim Deployments needs the agent operator's own account",
+  "sources": [
+    "https://vercel.com/llms.txt",
+    "https://vercel.com/get-started.md",
+    "https://vercel.com/docs/mcp/vercel-mcp",
+    "https://vercel.com/docs/cli/login",
+    "https://vercel.com/docs/cli/signup.md",
+    "https://vercel.com/changelog/new-vercel-cli-login-flow",
+    "https://vercel.com/docs/deployments/claim-deployments",
+    "https://vercel.com/signup",
+    "https://mcp.vercel.com/.well-known/oauth-protected-resource",
+    "https://mcp.vercel.com/.well-known/oauth-authorization-server"
+  ]
+}

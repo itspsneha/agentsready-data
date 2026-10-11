@@ -1,0 +1,67 @@
+{
+  "company": "Clerk",
+  "domain": "clerk.com",
+  "key_path": [
+    "`npx clerk init` (or `clerk init -y` in agent mode) with no account: 'get started immediately with temporary development keys' (keyless mode)",
+    "App works locally right away with dev keys",
+    "Later (optional): `clerk auth login` (browser) + `clerk link` to claim/attach to an account; `clerk env pull` writes real keys"
+  ],
+  "human_gates": [
+    "none for dev keys",
+    "email_verification / OAuth login only when claiming or going to production",
+    "DNS/domain setup for production (`clerk deploy`)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: `clerk auth login`; CLI detects non-TTY and switches to agent mode with JSON output and --input-json",
+    "oauth_dcr_for_mcp": "Clerk's own MCP is a docs/snippets server (no account needed). As an enabler, Clerk's OAuth server supports DCR, CIMD and Device Authorization Grant for customers' MCP servers",
+    "provisioning_api_mints_keys": "yes: Platform API (`clerk apps create`, `clerk api --platform`), Backend API for API keys/M2M machines",
+    "scoped_keys": "yes: dev vs prod instances; M2M machine scopes; API keys per user/org",
+    "test_dev_instances": "yes: every app has development + production instances",
+    "free_tier": "yes",
+    "keyless_claimable_dev_mode": "yes: temporary development keys without an account, claimable later"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.clerk.com/mcp",
+      "transport": "streamable HTTP",
+      "auth": "none needed (serves SDK snippets/guides)",
+      "status": "Beta"
+    },
+    "local": "via mcp-remote for Claude Desktop",
+    "docs_mcp": "yes. This is a docs/implementation-pattern MCP, not a product-management MCP (management goes through `clerk api`)",
+    "one_click": "`clerk mcp install` registers it in every detected client (Claude Code, Cursor, VS Code), non-interactive in agent mode; `clerk doctor` verifies reachability"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://clerk.com/llms.txt and https://clerk.com/docs/llms.txt",
+    "llms_full_txt": "https://clerk.com/docs/llms-full.txt",
+    "md_pages": "append .md to any /docs, /blog, /changelog URL; helpful 404 .md pages list indexes",
+    "openapi": "https://clerk.com/openapi.json (Backend), FAPI and Platform API specs",
+    "agent_skills": "https://clerk.com/SKILL.md, /.well-known/agent-skills/index.json, `npx skills add clerk/skills`",
+    "use_with_ai_page": "https://clerk.com/agents (incl. LLM leaderboard of models writing Clerk code, updated 2026-09-30)"
+  },
+  "time_to_first_call_minutes": 2,
+  "fully_autonomous_possible": true,
+  "agent_friendliness_score": 9,
+  "score_justification": "Keyless dev mode means zero human steps to a working integration, plus an agent-mode CLI, SKILL.md and a well-known skills index. Clerk's MCP is docs-only, though.",
+  "best_practice": "Keyless mode: start building with temporary dev keys and claim the account later. Also publishes /.well-known/agent-skills/index.json.",
+  "biggest_gap": "No product-management MCP (MCP only serves snippets, Beta); workspace/billing/logs only in the dashboard",
+  "enabler_features": [
+    "OAuth server with Dynamic Client Registration + Client ID Metadata Documents (CIMD) + Device Authorization Grant for MCP servers; build-mcp-server guides for Next.js/Express",
+    "M2M tokens and machines with scopes",
+    "API keys product (create/verify/revoke for user or org)",
+    "Agent Tasks (Beta): mint a URL that creates a session on behalf of a user for agent/test flows",
+    "CLI one-liner to switch CIMD/DCR on: `npx clerk api instance/oauth_application_settings -X PATCH`"
+  ],
+  "sources": [
+    "https://clerk.com/llms.txt",
+    "https://clerk.com/docs/llms.txt",
+    "https://clerk.com/docs/cli.md",
+    "https://clerk.com/docs/guides/ai/mcp/clerk-mcp-server.md",
+    "https://clerk.com/agents",
+    "https://clerk.com/docs/nextjs/guides/ai/mcp/build-mcp-server.md",
+    "https://clerk.com/docs/reference/backend/agent-tasks/create.md",
+    "https://clerk.com/openapi.json",
+    "https://dashboard.clerk.com/sign-up"
+  ]
+}

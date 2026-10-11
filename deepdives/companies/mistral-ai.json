@@ -1,0 +1,59 @@
+{
+  "company": "Mistral AI",
+  "domain": "mistral.ai",
+  "key_path": [
+    "Sign up at console.mistral.ai (email or SSO providers)",
+    "Verify email",
+    "Phone verification by SMS for Free mode (one number per free plan, per help center; the docs quickstart doesn't mention it)",
+    "Free mode is on by default with no card",
+    "Studio > API Keys > Create new key (name, expiration, connector scope)",
+    "export MISTRAL_API_KEY and curl /v1/chat/completions"
+  ],
+  "human_gates": [
+    "email_verification",
+    "phone_otp"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "yes for Vibe. The Vibe CLI setup wizard opens a browser to sign in and stores credentials; a pasted API key is the alternative",
+    "oauth_dynamic_client_registration": "no. The remote MCP uses a static Bearer API key",
+    "provisioning_api_mints_keys": "partial. The Admin API (Admin API key) manages users, workspaces, API keys, limits and audit logs. Service accounts plus workload identity federation give short-lived tokens without stored secrets",
+    "scoped_keys": "yes. Workspace-scoped keys, connector access scope, expiration policies",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "yes. Free mode, no card, rate-limited (opt-in to data training on the free plan, per help center)"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": "none found (docs.mistral.ai/mcp returns HTML)",
+    "product_mcp": {
+      "url": "https://api.mistral.ai/mcp",
+      "transport": "streamable HTTP",
+      "auth": "Authorization: Bearer <MISTRAL_API_KEY>",
+      "scope": "Studio workspace as tools, including WRITE tools: Skills, workflows/executions, schedules, evaluations, app deploy/rollback/publish"
+    },
+    "local_package": "none needed",
+    "one_click_install": "copy-paste commands for Vibe (`vibe mcp add`), Claude Code (`claude mcp add --transport http ...`) and Codex. No deeplinks"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.mistral.ai/llms.txt (every link is the .md version)",
+    "llms_full_txt": "https://docs.mistral.ai/llms-full.txt (~2.8MB)",
+    "markdown_pages": "yes",
+    "openapi": "https://docs.mistral.ai/openapi.yaml",
+    "agents_md_or_rules": "Skills in Studio; Vibe config"
+  },
+  "time_to_first_call_minutes": 5,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "score_justification": "Free tier with no card, a remote product MCP with write tools on the main API host, an Admin API, WIF and full markdown/OpenAPI docs. Only the phone OTP and the lack of OAuth hold it back.",
+  "best_practice": "The product MCP sits at api.mistral.ai/mcp and uses the same API key, so once you have a key it is one command to connect.",
+  "biggest_gap": "The MCP has no OAuth, so an agent still has to get a key a human copied out of the dashboard. The phone OTP gates the free tier.",
+  "notes_out_of_date": "Help-center articles still say 'Experiment plan'; current docs call it 'Free mode'.",
+  "sources": [
+    "https://docs.mistral.ai/llms.txt",
+    "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key.md",
+    "https://docs.mistral.ai/resources/mcp.md",
+    "https://docs.mistral.ai/admin/identity-access/api-keys.md",
+    "https://docs.mistral.ai/getting-started/quickstarts/vibe-code/install-cli.md",
+    "https://docs.mistral.ai/openapi.yaml",
+    "https://help.mistral.ai/en/articles/450104-how-can-i-try-the-api-for-free-with-the-experiment-plan"
+  ]
+}

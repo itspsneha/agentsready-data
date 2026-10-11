@@ -1,0 +1,63 @@
+{
+  "company": "Salesforce",
+  "domain": "salesforce.com",
+  "key_path": [
+    "Fill Developer Edition signup form at developer.salesforce.com/signup (name, email, company, country, username)",
+    "Click activation link in email and set password",
+    "Complete MFA registration at first UI login (Salesforce Authenticator/TOTP)",
+    "Agent installs Salesforce CLI (npm i -g @salesforce/cli) and runs 'sf org login web' (browser OAuth) -> 'sf org display' yields access token + instance URL",
+    "Call <instance>/services/data/vXX.X/sobjects with Bearer token (or use DX MCP: npx @salesforce/mcp --orgs DEFAULT_TARGET_ORG)"
+  ],
+  "human_gates": [
+    "email_verification",
+    "2fa",
+    "admin_approval"
+  ],
+  "human_gates_notes": "Hosted MCP: admin must enable MCP servers in Setup (disabled by default) and create an External Client App (OAuth, PKCE, JWT tokens), and hosted MCP is billed against Flex Credits ('contact your account executive' = sales_contact for production).",
+  "agent_native_auth": {
+    "cli_device_login": "yes - 'sf org login web' and 'sf org login device'",
+    "mcp_oauth_dcr": "no - clients must use 'your own OAuth client' with consumer key from an External Client App",
+    "personal_access_tokens": "no PATs; session tokens via CLI, security tokens for legacy SOAP",
+    "scoped_tokens": "yes - OAuth scopes (api, sfap_api, refresh_token)",
+    "management_api_mints_keys": "partial - Metadata API can deploy External Client Apps; API Catalog Connect API manages MCP servers",
+    "free_tier_or_sandbox": "yes - free Developer Edition with Agentforce and Data 360; scratch orgs"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://api.salesforce.com/platform/mcp/v1/platform/<server> (prod) and /v1/sandbox/<server>; e.g. platform/sobject-all",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.0 + PKCE via customer-created External Client App; GA April 2026, old v1-beta.2 URLs dead"
+    },
+    "local": "Salesforce DX MCP server (npx @salesforce/mcp) using CLI-authenticated orgs; Agentforce Vibes MCP servers",
+    "type": "product MCP (hosted) + developer MCP (DX)",
+    "one_click_install": "no - custom connector + paste consumer key in Claude/ChatGPT/Cursor",
+    "claude_directory": "not found in registry search",
+    "chatgpt_directory": "not verified"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developer.salesforce.com/llms.txt -> https://developer.salesforce.com/docs/llms.txt with per-product llms-*.txt (e.g. llms-hosted-mcp-servers.txt)",
+    "llms_full_txt": "not found",
+    "markdown_pages": "yes - docs .md pages linked from llms files",
+    "openapi": "partial - per-API specs; REST API largely described by describe endpoints",
+    "ai_page": "https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/hosted-mcp-servers-overview.md",
+    "agents_md_or_rules": "llms.txt includes explicit 'Instructions for LLM Agents' section"
+  },
+  "time_to_first_call_minutes": 15,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "score_justification": "CLI login and DX MCP are good for developers, but hosted MCP needs admin setup, an External Client App, no DCR, MFA, and Flex Credits billing.",
+  "best_practice": "Per-product llms-*.txt files with an explicit instruction block telling LLM agents which official docs to prefer.",
+  "biggest_gap": "Hosted MCP is off by default, requires a hand-built External Client App, and is billed via Flex Credits that need a sales contact.",
+  "sources": [
+    "https://developer.salesforce.com/llms.txt",
+    "https://developer.salesforce.com/docs/llms.txt",
+    "https://developer.salesforce.com/docs/llms-hosted-mcp-servers.txt",
+    "https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/hosted-mcp-servers-overview.md",
+    "https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/claude.md",
+    "https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/activate-mcp-servers.md",
+    "https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_mcp_server_eca.htm",
+    "https://developer.salesforce.com/signup",
+    "https://mcpservers.org/servers/salesforcecli/mcp"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "company": "Zerodha Kite Connect",
+  "domain": "kite.trade",
+  "key_path": [
+    "Open a Zerodha trading + demat account (online KYC: PAN, Aadhaar e-sign, bank proof, in-person verification by video/selfie). Takes 1-3 days",
+    "Sign up on developers.kite.trade (separate developer account), verify email",
+    "Create an app: pick Personal (free, orders/portfolio only, no market data) or Connect (Rs 500/month per key, includes live and historical data). Paid apps need wallet credits topped up",
+    "Set the redirect URL, get api_key + api_secret",
+    "Whitelist a static IP in the app settings before any order can be placed (SEBI retail-algo framework, mandatory since 1 Apr 2026)",
+    "Every day: open kite.zerodha.com/connect/login?v=3&api_key=..., log in with Zerodha user ID, password and TOTP 2FA, then capture request_token from the redirect",
+    "POST /session/token with checksum SHA-256(api_key+request_token+api_secret) to get the access_token. It expires at 6 AM the next day"
+  ],
+  "human_gates": [
+    "kyc_business_verification",
+    "regulatory_registration",
+    "email_verification",
+    "2fa",
+    "daily_reauth",
+    "credit_card_required"
+  ],
+  "human_gates_notes": "KYC comes from opening a SEBI-regulated broking account. 'credit_card_required' here means a prepaid wallet top-up for the paid Connect tier; the Personal tier is free. Daily login with TOTP cannot be automated within the ToS. A static IP whitelist is required for orders.",
+  "agent_native_auth": {
+    "cli_login": "no. No official CLI. The login is a browser redirect flow that runs daily",
+    "oauth_dcr_for_mcp": "no. The hosted MCP (mcp.kite.trade) does not advertise MCP OAuth (/.well-known/oauth-protected-resource returns 404). Instead it exposes a `login` tool that returns a Kite login URL for the human to open",
+    "provisioning_api_mint_keys": "no",
+    "scoped_keys": "partial. Personal vs Connect app types. The self-hosted MCP supports an EXCLUDED_TOOLS env var to make a read-only instance",
+    "sandbox_test_credentials": "no. There is no paper-trading sandbox; every call hits the live account",
+    "free_tier": "yes. The Personal API is free (since Mar 2025) but has no market data"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP",
+    "remote": {
+      "url": "https://mcp.kite.trade/mcp (also /sse)",
+      "transport": "Streamable HTTP (protocolVersion 2025-03-26, server v0.3.2)",
+      "auth": "No API key needed. A session-level `login` tool returns a Kite login URL and the user logs in with Zerodha credentials + TOTP. Not MCP-spec OAuth"
+    },
+    "local": "github.com/zerodha/kite-mcp-server (Go; stdio/HTTP/SSE; needs your own KITE_API_KEY/SECRET)",
+    "tools_observed": "22 tools incl. place_order, modify_order, cancel_order, place_gtt_order, get_holdings, get_quotes, get_historical_data, login (probed unauthenticated tools/list 2026-10-11)",
+    "one_click_install": "no. README uses `npx mcp-remote https://mcp.kite.trade/mcp` in claude_desktop_config.json. Also listed in third-party directories"
+  },
+  "docs_for_agents": {
+    "llms_txt": "no (kite.trade/llms.txt and /docs/connect/v3/llms.txt both 404)",
+    "markdown_pages": "no",
+    "openapi": "no official OpenAPI spec. Docs are HTML at kite.trade/docs/connect/v3/",
+    "use_with_ai_page": "README of kite-mcp-server only"
+  },
+  "time_to_first_call_minutes": {
+    "with_existing_zerodha_account_via_hosted_mcp": 3,
+    "with_existing_account_via_api_key": 20,
+    "from_zero": "1-3 days (broker KYC)"
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "The hosted MCP is excellent for an existing Zerodha user: no key, one URL, full trading tools. But the regulated KYC account, daily TOTP re-login and static-IP rule mean an agent can never run unattended.",
+  "best_practice": "A zero-config hosted MCP that sidesteps API-key provisioning entirely by asking the end user to log in through a tool call",
+  "biggest_gap": "The daily access-token expiry at 6 AM with mandatory 2FA, plus no llms.txt/OpenAPI and no sandbox. Agents trade against real money with no test mode",
+  "sources": [
+    "https://kite.trade/docs/connect/v3/user/",
+    "https://github.com/zerodha/kite-mcp-server",
+    "https://raw.githubusercontent.com/zerodha/kite-mcp-server/master/README.md",
+    "https://mcp.kite.trade/mcp",
+    "https://www.marketcalls.in/algo-trading/zerodha-makes-trading-api-free-for-personal-use-bundles-historical-data-with-connect-api.html",
+    "https://kite.trade/forum/discussion/13663/changing-access-token-expiry-to-midnight-instead-of-6am",
+    "https://support.zerodha.com/category/trading-and-markets/general-kite/kite-api/articles/static-ip"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "company": "GitHub",
+  "domain": "github.com",
+  "key_path": [
+    "human signs up at github.com/signup: email, password, username, visual/audio captcha puzzle, email 'launch code' verification",
+    "`gh auth login` (web device flow: one-time code entered at github.com/login/device)",
+    "`gh auth token` prints an OAuth token usable as an API key (scopes repo, read:org, gist); or Settings > Developer settings > fine-grained PAT",
+    "MCP: `claude mcp add-json github '{\"type\":\"http\",\"url\":\"https://api.githubcopilot.com/mcp\",\"headers\":{\"Authorization\":\"Bearer <PAT>\"}}'` (PAT required for Claude Code). OAuth only works in hosts with a pre-registered GitHub App (VS Code, Claude.ai/Desktop, Cursor)"
+  ],
+  "human_gates": [
+    "captcha",
+    "email_verification",
+    "2fa (mandatory for most github.com users; enrolment enforced after signup)",
+    "browser device-code entry"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `gh auth login` device flow; the local github-mcp-server also has a built-in OAuth / device-code fallback",
+    "mcp_oauth_dcr": "no: protected-resource metadata points to https://github.com/login/oauth, which publishes no RFC 8414 metadata or registration endpoint. README: 'Each MCP host application needs to configure a GitHub App or OAuth App'",
+    "provisioning_api_mints_keys": "no API to mint PATs. GitHub Apps can mint short-lived installation tokens; `gh auth token` reuses the CLI OAuth token",
+    "scoped_tokens": "yes: fine-grained PATs (per-repo, per-permission, expiry) and GitHub App tokens",
+    "free_tier": "yes",
+    "claimable_anonymous": "no"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://api.githubcopilot.com/mcp/ (also /mcp/readonly, /mcp/insiders, per-toolset paths)",
+      "transport": "streamable_http",
+      "auth": "OAuth (pre-registered hosts only) or PAT bearer"
+    },
+    "local": "docker ghcr.io/github/github-mcp-server or native binary; built-in OAuth login (callback port 8085) or GITHUB_PERSONAL_ACCESS_TOKEN",
+    "type": "product only (repos, issues, PRs, Actions, code security). Docs search not included per llms.txt",
+    "one_click": "VS Code, VS Code Insiders, Visual Studio install buttons; Docker variants; per-host guides (Claude, Cursor, Copilot CLI, JetBrains...)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.github.com/llms.txt",
+    "llms_full_txt": "no; uses docs APIs instead",
+    "markdown_pages": "yes via https://docs.github.com/api/article/body?pathname=... (text/markdown), Page List API and Search API",
+    "openapi": "https://github.com/github/rest-api-description (REST OpenAPI) + GraphQL schema",
+    "use_with_ai_page": "Copilot MCP docs; AGENTS.md / copilot-instructions.md conventions supported by Copilot coding agent"
+  },
+  "time_to_first_call_minutes": 8,
+  "fully_autonomous_possible": false,
+  "autonomy_note": "About 1 minute if the user already has an account (gh device flow then reuse the token for MCP). The new-account path has captcha and email gates.",
+  "agent_friendliness_score": 7,
+  "score_justification": "gh device flow and fine-grained PATs are excellent and nearly every agent already has an account. Signup is heavily gated, the remote MCP has no DCR so non-blessed clients need a PAT, and there is no docs MCP.",
+  "best_practice": "Docs Article/Search APIs that return markdown, documented in llms.txt as the preferred LLM access path",
+  "biggest_gap": "Remote MCP OAuth only works for hosts with a pre-registered GitHub App (no DCR), so most CLI agents fall back to copying a PAT by hand",
+  "sources": [
+    "https://docs.github.com/llms.txt",
+    "https://docs.github.com/api/article/body?pathname=/en/rest/quickstart",
+    "https://raw.githubusercontent.com/github/github-mcp-server/main/README.md",
+    "https://raw.githubusercontent.com/github/github-mcp-server/main/docs/installation-guides/install-claude.md",
+    "https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp",
+    "https://github.com/signup"
+  ]
+}

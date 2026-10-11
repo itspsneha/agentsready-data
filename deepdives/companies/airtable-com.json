@@ -1,0 +1,59 @@
+{
+  "company": "Airtable",
+  "domain": "airtable.com",
+  "key_path": [
+    "Sign up at airtable.com with Google/Apple OAuth or email (email signup requires verification)",
+    "Onboarding creates a workspace (skip the base wizard)",
+    "Open deep link https://airtable.com/create/tokens/new?scopes=data.records:read,data.records:write,schema.bases:read,... (scopes pre-selected), pick bases/workspaces, Create, copy PAT",
+    "Call https://api.airtable.com/v0/meta/bases with Bearer PAT (or 'airtable-mcp whoami')"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "human_gates_notes": "Email gate avoided with Google OAuth. Enterprise admins can restrict third-party integrations/MCP.",
+  "agent_native_auth": {
+    "cli_device_login": "partial - @airtable/mcp-cli exists but auth is paste-a-PAT ('airtable-mcp configure'), no browser login",
+    "mcp_oauth_dcr": "yes - airtable.com/oauth2/v1/register, client_id_metadata_document_supported=true; per-connection base/workspace picker",
+    "personal_access_tokens": "yes",
+    "scoped_tokens": "yes - granular scopes + per-base/workspace resource selection",
+    "management_api_mints_keys": "no (enterprise service accounts only)",
+    "free_tier_or_sandbox": "yes - MCP 'available to all users on all plans'"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.airtable.com/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth via DCR (default), static OAuth client, or PAT as Authorization Bearer header"
+    },
+    "local": "CLI 'airtable-mcp' calls MCP tools from terminal (npm @airtable/mcp-cli)",
+    "type": "product MCP + agent skills/plugins",
+    "one_click_install": "yes - Claude directory link, Claude Code plugin deep link (claude-cli://... plugin install airtable@claude-plugins-official), ChatGPT app link, Gemini",
+    "claude_directory": true,
+    "chatgpt_directory": true
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://airtable.com/developers/llms.txt -> https://airtable.com/developers/agents/llms.txt",
+    "llms_full_txt": "not found (404)",
+    "markdown_pages": "yes - .md agent docs",
+    "openapi": "not found officially",
+    "ai_page": "https://airtable.com/developers/agents (Quickstart, MCP per client, Controls, Skills)",
+    "agents_md_or_rules": "yes - published agent skills (overview, filters, CLI, product/sales/marketing ops)"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "Dedicated 'agents' doc section, DCR + PAT-bearer MCP, prefilled-scope token deep link, skills, and directory listings in Claude/ChatGPT/Gemini.",
+  "best_practice": "Token-creation deep link with the exact MCP scopes pre-selected in the query string - the human only clicks Create.",
+  "biggest_gap": "No llms-full.txt or official OpenAPI spec for the REST API; CLI has no browser/device login.",
+  "sources": [
+    "https://airtable.com/developers/llms.txt",
+    "https://airtable.com/developers/agents/llms.txt",
+    "https://airtable.com/developers/agents/intro/quickstart.md",
+    "https://airtable.com/developers/agents/mcp/getting-started.md",
+    "https://airtable.com/developers/agents/mcp/other.md",
+    "https://airtable.com/developers/agents/mcp/cli.md",
+    "https://airtable.com/developers/agents/mcp/controls.md",
+    "https://mcp.airtable.com/.well-known/oauth-protected-resource"
+  ]
+}

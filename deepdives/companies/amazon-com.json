@@ -1,0 +1,81 @@
+{
+  "company": "Amazon (Selling Partner API / agents)",
+  "domain": "amazon.com",
+  "key_path": [
+    "Have an Amazon.com account (email + phone OTP; 2FA mandatory for Seller Central).",
+    "Gather business registration number, government ID/passport, recent bank or credit-card statement.",
+    "Sign in to Solution Provider Portal -> Register -> enroll -> 'Build applications that use SP APIs'.",
+    "Verify identity: business info, PIN via SMS/call + CAPTCHA, upload documents, live VIDEO call with an Amazon associate.",
+    "Create developer profile (use case, roles; restricted roles need security/data-protection docs) -> review.",
+    "Register a Sandbox app client (allowed while profile is under review) -> get LWA client id/secret -> first sandbox call.",
+    "Production: self-authorize a private app (refresh token) after profile approval; public apps need full security review + Appstore listing.",
+    "Seller shortcut (no dev registration): add Claude connector https://sellingpartner-ai.amazon.com/mcp -> OAuth via sellercentral.amazon.com/apps/agents/authorize (requires an existing seller account)."
+  ],
+  "human_gates": [
+    "email_verification",
+    "phone_otp",
+    "captcha",
+    "2fa",
+    "kyc_business_verification",
+    "manual_approval",
+    "app_review"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no CLI login for SP-API",
+    "oauth_dcr_for_mcp": "yes (CIMD) for the remote Selling Partner MCP - AS metadata has client_id_metadata_document_supported:true, PKCE S256, token endpoint api.amazon.com/auth/o2/token",
+    "sandboxes": "yes - SP-API sandbox apps usable before profile approval",
+    "scoped_tokens": "yes - role-based (restricted vs unrestricted roles), LWA refresh tokens",
+    "free_tier": "yes as of Oct 2026 - the announced $1,400/yr subscription + GET-call fees were reportedly cancelled on 2026-05-12 (secondary sources; verify)",
+    "evidence": "https://sellingpartner-ai.amazon.com/.well-known/oauth-authorization-server/mcp ; https://developer-docs.amazon.com/sp-api/docs/onboarding-step-2-create-an-spp-account.md"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Amazon Selling Partner MCP",
+        "url": "https://sellingpartner-ai.amazon.com/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth 2.1 + PKCE via Seller Central, CIMD; added to Claude directory Sept 2026"
+      }
+    ],
+    "local": [
+      "@amazon-sp-api-release/sp-api-dev-mcp v1.0.5 (npm, Aug 2026): sp-api-dev-assistant (docs search, endpoint catalog, live execute, codegen, migration) + sp-api-workflow MCP. Labeled 'example, not a supported product'. Docs tools need no credentials."
+    ],
+    "types": [
+      "docs MCP (local)",
+      "product/seller MCP (remote)"
+    ],
+    "directories": "Claude: 'Amazon Selling Partner' (Anthropic verified, Made by Amazon). No consumer-shopping MCP; Amazon Ads MCP in open beta since Feb 2026 (secondary).",
+    "agentic_commerce_protocols": [
+      "None open to third-party agents. First-party only: Rufus/'Buy for Me' (buys on non-Amazon sites), Alexa+ / 'Alexa for Shopping' (reported). Amazon v. Perplexity Comet injunction (Mar 2026, reported) - hostile to outside shopping agents."
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes - developer-docs.amazon.com/sp-api/llms.txt (1,258 lines); links use the new developer-docs.amazon domain (resolves). Pages carry `agentTools: siteIndex/projectIndex` front-matter.",
+    "markdown_pages": "yes - every doc has a .md version",
+    "openapi": "yes - SP-API models published (selling-partner-api-models on GitHub)",
+    "build_with_ai": "partial - local-ai-sandbox + MCP samples in amzn/selling-partner-api-samples",
+    "robots_ai_stance": "amazon.com robots.txt: Disallow / for GPTBot, ChatGPT-User, ClaudeBot, Claude-User, Claude-SearchBot, PerplexityBot, Perplexity-User, Google-Extended, meta-externalagent, CCBot - the most hostile in this batch"
+  },
+  "time_to_first_call_minutes": 2880,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 4,
+  "score_justification": "Excellent agent-oriented docs and a new CIMD-based seller MCP, but developer onboarding needs KYC + a live video ID call, and the consumer storefront actively blocks every AI user-agent.",
+  "best_practice": "Doc pages advertise their llms.txt indexes in front-matter (agentTools), and the remote seller MCP lets an existing seller skip developer registration entirely.",
+  "biggest_gap": "Video-call identity verification for developers; consumer side closed to third-party agents (robots + litigation) while Amazon pushes its own agents.",
+  "sources": [
+    "https://developer-docs.amazon.com/sp-api/llms.txt",
+    "https://developer-docs.amazon.com/sp-api/docs/onboarding-step-1-prepare-for-registration.md",
+    "https://developer-docs.amazon.com/sp-api/docs/onboarding-step-2-create-an-spp-account.md",
+    "https://developer-docs.amazon.com/sp-api/docs/onboarding-step-4-register-your-first-sandbox-application.md",
+    "https://registry.npmjs.org/@amazon-sp-api-release%2Fsp-api-dev-mcp",
+    "https://github.com/amzn/selling-partner-api-samples",
+    "https://sellingpartner-ai.amazon.com/.well-known/oauth-protected-resource/mcp",
+    "https://sellingpartner-ai.amazon.com/.well-known/oauth-authorization-server/mcp",
+    "https://claude.com/marketplace/connectors/amazon-selling-partner",
+    "https://www.amazon.com/robots.txt",
+    "https://novadata.io/resources/news/amazon-cancels-sp-api-fees-may-2026",
+    "https://ppc.land/amazon-drops-sp-api-fees-after-developer-pushback",
+    "https://stellagent.ai/insights/amazon-rufus-buy-for-me-alexa-plus"
+  ]
+}

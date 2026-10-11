@@ -1,0 +1,63 @@
+{
+  "company": "WorkOS",
+  "domain": "workos.com",
+  "key_path": [
+    "`npx workos@latest install` (or raw `POST https://api.workos.com/x/one-shot-environments`, no body, no auth), which returns apiKey (sk_test_), clientId, claimToken, authkitDomain",
+    "Use the apiKey immediately: full scope, works before any human is involved",
+    "Optional, later: `npx workos@latest env claim` mints a nonce, and the human opens dashboard.workos.com/claim?nonce=... to bind it to an account"
+  ],
+  "human_gates": [
+    "none to first call",
+    "claim step (sign in/sign up) only to make it permanent"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: workos CLI auto-detects agent contexts (CLAUDECODE, CURSOR_AGENT, CODEX_SANDBOX) and emits JSON; gh-style exit codes",
+    "oauth_dcr_for_mcp": "yes: remote MCP uses OAuth via WorkOS Connect (consent screen)",
+    "provisioning_api_mints_keys": "yes: anonymous one-shot environment API mints a test API key",
+    "scoped_keys": "test (sk_test_) environments; org/user API keys product",
+    "test_dev_instances": "yes: staging/test environments",
+    "free_tier": "yes: AuthKit free to 1M MAU",
+    "keyless_claimable_dev_mode": "yes: canonical example, documented at https://workos.com/auth.md for agents"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.workos.com/mcp",
+      "transport": "streamable HTTP",
+      "auth": "OAuth (WorkOS Connect consent)"
+    },
+    "local": "none needed",
+    "docs_mcp": "no separate docs MCP; product MCP manages orgs, users, SSO connections, branding",
+    "one_click": "no deeplinks found; documented `claude mcp add` / `codex mcp add` one-liners"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://workos.com/docs/llms.txt (also workos.com/llms.txt)",
+    "llms_full_txt": "https://workos.com/docs/llms-full.txt",
+    "md_pages": "yes, every reference page in .md",
+    "openapi": "not confirmed this session",
+    "agent_onboarding_doc": "https://workos.com/auth.md: an agent-addressed 'how to register a credential' spec with an error/retry table",
+    "feedback": "https://workos.com/docs/feedback.md: a channel for agents to report wrong docs"
+  },
+  "time_to_first_call_minutes": 1,
+  "fully_autonomous_possible": true,
+  "agent_friendliness_score": 10,
+  "score_justification": "An agent gets a working API key with one unauthenticated POST or CLI command, can claim it later, uses an OAuth remote MCP, and has an auth.md written for agents.",
+  "best_practice": "auth.md plus one-shot anonymous environments with a claim ceremony: provision now, attach to a human later",
+  "biggest_gap": "One-shot creds are test-only; production still needs the claim + dashboard. No one-click MCP deeplinks.",
+  "enabler_features": [
+    "AuthKit Agent Registration API (anonymous / service_auth / refresh types, pre_claim vs post_claim scopes, claim ceremony) lets other SaaS offer the same auth.md flow",
+    "AuthKit for MCP: authorization server with CIMD (preferred) and DCR fallback",
+    "Agents API (blueprint, instance, session)",
+    "API Keys widget + org/user API keys API",
+    "Radar bot protection"
+  ],
+  "sources": [
+    "https://workos.com/docs/llms.txt",
+    "https://workos.com/auth.md",
+    "https://workos.com/docs/mcp.md",
+    "https://workos.com/docs/reference/authkit/agent-registration.md",
+    "https://workos.com/docs/authkit/mcp.md",
+    "https://workos.com/docs/llms-full.txt",
+    "https://signin.workos.com/sign-up"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "company": "Uber",
+  "domain": "uber.com",
+  "key_path": [
+    "Consumer agent path (fastest): add Claude connector https://mcp.uber.com/claude/rides-3p/mcp (rides price/ETA estimates) and/or https://mcp.ubereats.com/eats-claude/mcp (restaurant/menu browse) -> OAuth sign-in to Uber account (phone OTP) -> use. Booking/checkout hands off to the Uber app.",
+    "Developer path: sign in to developer.uber.com dashboard with an Uber account -> Register App -> pick product (e.g. Rides/Guest Rides) -> accept terms -> get client_id/secret.",
+    "Request privileged scope (guests.trips, business.*, eats.*) from Uber / Uber for Business rep with org name, admin email, client id, use case and endpoint list -> wait for approval -> enable scope in dashboard.",
+    "client_credentials token -> call sandbox (sandbox-api.uber.com/v1/guests/) -> production after review."
+  ],
+  "human_gates": [
+    "phone_otp",
+    "partner_application",
+    "manual_approval",
+    "sales_contact"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no",
+    "oauth_dcr_for_mcp": "unknown - endpoints returned plain 403 'access denied' to our unauthenticated probe from India (no WWW-Authenticate / PRM), suggesting client/geo allowlisting rather than open DCR; connectors work inside Claude",
+    "sandboxes": "yes - Guest Rides sandbox",
+    "scoped_tokens": "yes - OAuth scopes, but useful ones are privileged",
+    "free_tier": "API free but gated; consumer connector free with Uber account",
+    "evidence": "probe of mcp.uber.com and mcp.ubereats.com (403); https://developer.uber.com/docs/businesses/receipts/guides/account-setup"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Uber (rides estimates)",
+        "url": "https://mcp.uber.com/claude/rides-3p/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth (Uber account)"
+      },
+      {
+        "name": "Uber Eats (explore restaurants/dishes)",
+        "url": "https://mcp.ubereats.com/eats-claude/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth (Uber account)"
+      }
+    ],
+    "local": [],
+    "types": [
+      "consumer/commerce MCP (read-mostly; no in-chat checkout)"
+    ],
+    "directories": "Claude directory: 'Uber' and 'Uber Eats' (launched with Claude consumer connectors, Apr 2026). URLs are Claude-specific paths ('/claude/', '/eats-claude/'). ChatGPT Uber/Uber Eats apps reported by secondary sources.",
+    "agentic_commerce_protocols": [
+      "none public; hand-off to Uber app"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "no - developer.uber.com/llms.txt 404; www.uber.com/llms.txt 406",
+    "markdown_pages": "no",
+    "openapi": "partial - per-product specs (e.g. guest-rides/all-spec), Postman collections",
+    "build_with_ai": "no developer-facing AI/MCP page found",
+    "robots_ai_stance": "no AI-specific rules; general * disallows /api/ and some paths"
+  },
+  "time_to_first_call_minutes": 5,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 4,
+  "score_justification": "Polished first-party consumer connectors in Claude, but they are estimate/browse-only, look client-allowlisted, and the developer APIs sit behind privileged-scope approval with no agent-oriented docs.",
+  "best_practice": "Consumer MCPs scoped to safe read actions (estimates, menus) with booking/payment handed off to the native app.",
+  "biggest_gap": "No self-serve API for ride requests; no llms.txt/markdown docs; MCP endpoints are per-client paths rather than one open DCR server.",
+  "sources": [
+    "https://claude.com/marketplace/connectors/uber",
+    "https://claude.com/marketplace/connectors/uber-eats",
+    "https://mcp.uber.com/claude/rides-3p/mcp (probed: 403)",
+    "https://mcp.ubereats.com/eats-claude/mcp (probed: 403)",
+    "https://developer.uber.com/docs",
+    "https://developer.uber.com/docs/guest-rides/introduction",
+    "https://developer.uber.com/docs/guest-rides/guides/authentication",
+    "https://developer.uber.com/docs/businesses/receipts/guides/account-setup",
+    "https://developer.uber.com/llms.txt",
+    "https://www.uber.com/robots.txt",
+    "https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-turns-claude-into-a-front-door-for-daily-apps/"
+  ]
+}

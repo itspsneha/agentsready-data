@@ -1,0 +1,55 @@
+{
+  "company": "PostHog",
+  "domain": "posthog.com",
+  "key_path": [
+    "`npx @posthog/wizard@latest --signup --email you@example.com --region us` - creates account + project via provisioning API (OAuth 2.0 + PKCE), writes project API key + host into the codebase, installs SDK",
+    "First events flow immediately (project key phc_ is client-safe)",
+    "`npx @posthog/wizard mcp add` installs remote MCP (https://mcp.posthog.com/mcp, OAuth) into Claude Code/Cursor/VS Code/etc.",
+    "Later: human sets password from welcome email to use web app; personal API key (scoped, 'MCP Server' preset) only if needed for REST scripts"
+  ],
+  "human_gates": [
+    "interactive_wizard (--ci mode disabled in published builds)",
+    "oauth_consent_click for MCP",
+    "email_verification only to set a password / log in to the web app later"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes - wizard OAuth/PKCE login for existing accounts; PostHog CLI for error tracking/sourcemaps",
+    "oauth_dcr_for_mcp": "yes - authorization server metadata at us.posthog.com/.well-known/oauth-authorization-server with registration_endpoint /oauth/register/ and CIMD support; MCP routes US/EU automatically; API returns 401 with WWW-Authenticate resource_metadata; publishes https://us.posthog.com/auth.md manifest (WorkOS auth.md profile) listing signup + auth methods + scopes; ID-JAG (XAA) for Enterprise beta",
+    "provisioning_api_mints_keys": "yes - Provisioning API for partners creates accounts/projects and returns project API keys",
+    "scoped_keys": "yes - personal API keys with per-scope + per-project restriction and presets",
+    "test_credentials_sandbox": "no sandbox needed - free tier is the sandbox",
+    "free_tier": "yes - generous monthly free tier (1M events etc.), no card"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": "https://mcp.posthog.com/mcp, Streamable HTTP, OAuth (or personal API key with MCP Server preset); read/write across analytics, flags, experiments, errors, SQL, CDP",
+    "product_mcp_local": "not needed (source in PostHog/posthog services/mcp)",
+    "docs_mcp": "docs tools included in the MCP",
+    "one_click": "`npx @posthog/wizard mcp add` auto-installs into PostHog Desktop, Cursor, Claude Code, Claude Desktop, Codex, VS Code, Zed; `claude plugin install posthog`; PostHog AI plugin for Claude Code/Codex/Cursor/Gemini CLI; Lovable/Replit/v0 integrations"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://posthog.com/llms.txt (440KB, opens with wizard + MCP instructions)",
+    "markdown_pages": "yes - every docs page at .md with 'AI agents: this is one page...' header",
+    "openapi": "yes - OpenAPI schema served by the app; docs on generating SDKs with OpenAPI",
+    "use_with_ai_page": "https://posthog.com/docs/ai-engineering/ai-wizard.md, /docs/model-context-protocol, /docs/settings/agent-discovery.md",
+    "agents_md_or_rules": "auth.md manifest; agent skills; wizard writes rules into projects"
+  },
+  "time_to_first_call_minutes": 2,
+  "time_to_first_call_notes": "One wizard command produces account, project, key and instrumented code; MCP add is a second command + OAuth click.",
+  "fully_autonomous_possible": true,
+  "fully_autonomous_notes": "Account + project key are created without email verification or any form; only caveat is the wizard must run interactively (CI mode disabled), and MCP requires a consent click.",
+  "agent_friendliness_score": 10,
+  "agent_friendliness_justification": "Agent-initiated signup with no form, standards-based discovery chain (401 -> RFC 9728 -> RFC 8414 -> auth.md), DCR+CIMD OAuth MCP with region routing, provisioning API, scoped keys and a free tier.",
+  "best_practice": "Machine-discoverable auth: an unauthenticated 401 points to protected-resource metadata, which leads to an auth.md manifest describing how to sign up and authenticate - no hardcoded endpoints.",
+  "biggest_gap": "Signup wizard cannot run headless (--ci disabled) and the signup path does not mint a personal API key for REST use.",
+  "sources": [
+    "https://posthog.com/llms.txt",
+    "https://posthog.com/docs/ai-engineering/wizard-signup.md",
+    "https://posthog.com/docs/settings/agent-discovery.md",
+    "https://us.posthog.com/auth.md",
+    "https://us.posthog.com/.well-known/oauth-authorization-server",
+    "https://mcp.posthog.com/.well-known/oauth-protected-resource",
+    "https://posthog.com/docs/model-context-protocol.md",
+    "https://posthog.com/docs/model-context-protocol/faq.md"
+  ]
+}

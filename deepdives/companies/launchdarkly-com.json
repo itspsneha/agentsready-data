@@ -1,0 +1,55 @@
+{
+  "company": "LaunchDarkly",
+  "domain": "launchdarkly.com",
+  "key_path": [
+    "Sign up at app.launchdarkly.com/signup (email or SSO/social); free Developer plan, 'No credit card required'",
+    "Verify email",
+    "Project + environments (with SDK keys) are created by default",
+    "Credential: `ldcli login` (link to the UI, approve CLI access, token stored in config), or Account settings > Authorization > create API access token; or `ldcli setup` to create a first flag + SDK"
+  ],
+  "human_gates": [
+    "email_verification",
+    "browser approval for ldcli login / MCP OAuth"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: `ldcli login` gives an approval link and stores the access token",
+    "oauth_dcr_for_mcp": "yes: hosted MCP servers use OAuth from the client",
+    "provisioning_api_mints_keys": "yes: REST API can create access tokens, projects, environments",
+    "scoped_keys": "yes: access tokens by role/custom role; separate SDK/mobile/client-side IDs per environment",
+    "test_dev_instances": "yes: environments (Test/Production) per project; `ldcli dev-server` for local flags",
+    "free_tier": "yes: Developer plan $0 forever, no card; 14-day trial for pay-as-you-go",
+    "keyless_claimable_dev_mode": "partial: ldcli dev-server serves local flag values offline, but still syncs from a real project"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.launchdarkly.com/mcp/fm (feature flags), https://mcp.launchdarkly.com/mcp/aiconfigs (AI Configs)",
+      "transport": "streamable HTTP",
+      "auth": "OAuth"
+    },
+    "local": "npx @launchdarkly/mcp-server with an API access token (local MCP page in docs)",
+    "docs_mcp": "none separate",
+    "one_click": "yes: install pages https://mcp.launchdarkly.com/mcp/fm/install and /aiconfigs/install with per-client buttons"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://launchdarkly.com/docs/llms.txt (root launchdarkly.com/llms.txt is 404)",
+    "llms_full_txt": "linked as https://launchdarkly-preview.mintlify.app/llms-full.txt",
+    "md_pages": "yes (links resolve to .md)",
+    "openapi": "https://app.launchdarkly.com/api/v2/openapi.json",
+    "agent_skills": "LaunchDarkly agent skills page; Copilot flag-cleanup custom agent"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Free plan with no card, OAuth hosted MCP with one-click install pages, and CLI login. Email verification is still needed and llms.txt points at a preview domain.",
+  "best_practice": "Per-client MCP install pages, and splitting the MCP into two domain servers (flags vs AI Configs) to keep tool lists small",
+  "biggest_gap": "llms.txt links all point to launchdarkly-preview.mintlify.app (looks like a misconfigured or stale preview host); no claimable or anonymous path",
+  "sources": [
+    "https://launchdarkly.com/docs/llms.txt",
+    "https://launchdarkly-preview.mintlify.app/home/getting-started/mcp-hosted.md",
+    "https://launchdarkly-preview.mintlify.app/home/getting-started/ldcli.md",
+    "https://launchdarkly.com/pricing/",
+    "https://app.launchdarkly.com/api/v2/openapi.json",
+    "https://app.launchdarkly.com/signup"
+  ]
+}

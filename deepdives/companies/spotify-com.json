@@ -1,0 +1,69 @@
+{
+  "company": "Spotify",
+  "domain": "spotify.com",
+  "key_path": [
+    "Create Spotify account (email verification) and hold an ACTIVE Premium subscription (required for app owners of Development Mode apps since Feb 2026).",
+    "Log in at developer.spotify.com/dashboard -> accept Developer Terms.",
+    "Create app: name, description, redirect URI, tick 'Web API' -> Save -> copy Client ID / Client Secret (limit 1 client ID per developer for new apps).",
+    "client_credentials token (public catalog) or Authorization Code + PKCE (user data) -> first call. Dev mode: max 5 users, many endpoints removed, search capped at 10 results.",
+    "Consumer agent path: add Spotify connector https://mcp-gateway-external-pilot.spotify.net/mcp in Claude/ChatGPT -> OAuth via accounts.spotify.com."
+  ],
+  "human_gates": [
+    "email_verification",
+    "credit_card_required (Premium subscription for dev-mode app owners)",
+    "manual_approval (Extended Quota Mode for >5 users)",
+    "captcha (account signup)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no Spotify CLI; but accounts.spotify.com advertises an RFC 8628 device_authorization_endpoint (oauth2/device/authorize) - usable by CLI agents if a client is enabled for it",
+    "oauth_dcr_for_mcp": "no - MCP PRM points to accounts.spotify.com, whose metadata has no registration_endpoint and no CIMD flag; clients are pre-registered (Claude/ChatGPT)",
+    "sandboxes": "Development Mode acts as sandbox (5 allow-listed users)",
+    "scoped_tokens": "yes - fine-grained scopes (MCP: user-read-playback-state, playlist-modify-private, app-remote-control...)",
+    "free_tier": "API free, but app owner needs Premium",
+    "evidence": "https://mcp-gateway-external-pilot.spotify.net/.well-known/oauth-protected-resource ; https://accounts.spotify.com/.well-known/oauth-authorization-server"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Spotify (music & podcast recommendations, playback, playlists)",
+        "url": "https://mcp-gateway-external-pilot.spotify.net/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth 2.0 (accounts.spotify.com), PKCE S256; returns 401 + resource_metadata"
+      }
+    ],
+    "local": [],
+    "types": [
+      "consumer product MCP"
+    ],
+    "directories": "Claude directory: 'Spotify'. ChatGPT: Spotify app (launch partner of Apps in ChatGPT, Oct 2025). Hostname says 'external-pilot' - still pilot-branded.",
+    "agentic_commerce_protocols": [
+      "n/a (no purchases)"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes - developer.spotify.com/llms.txt (short; points to OpenAPI + Building with AI)",
+    "markdown_pages": "no",
+    "openapi": "yes - /reference/web-api/open-api-schema.yaml, explicitly allowed in robots",
+    "build_with_ai": "yes - /documentation/web-api/tutorials/building-with-ai (recommends OpenAPI, not MCP)",
+    "robots_ai_stance": "spotify.com and developer.spotify.com: no AI-specific blocks"
+  },
+  "time_to_first_call_minutes": 10,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "Self-serve dashboard, OpenAPI + llms.txt + official remote MCP in Claude and ChatGPT, but Premium paywall, 1 app/5 users dev-mode caps and endpoint removals (Feb 2026) throttle builders.",
+  "best_practice": "robots.txt explicitly allows the OpenAPI spec while blocking other YAMLs; a dedicated 'Building with AI' guide.",
+  "biggest_gap": "Feb 2026 dev-mode restrictions (Premium required, 5 users, 1 client ID) and no DCR, so custom agents cannot use the MCP gateway.",
+  "sources": [
+    "https://developer.spotify.com/llms.txt",
+    "https://developer.spotify.com/documentation/web-api/tutorials/building-with-ai",
+    "https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide",
+    "https://developer.spotify.com/robots.txt",
+    "https://www.spotify.com/robots.txt",
+    "https://mcp-gateway-external-pilot.spotify.net/mcp (probed: 401 w/ PRM)",
+    "https://mcp-gateway-external-pilot.spotify.net/.well-known/oauth-protected-resource",
+    "https://accounts.spotify.com/.well-known/oauth-authorization-server",
+    "https://accounts.spotify.com/.well-known/openid-configuration",
+    "https://claude.com/marketplace/connectors/spotify"
+  ]
+}

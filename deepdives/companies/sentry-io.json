@@ -1,0 +1,60 @@
+{
+  "company": "Sentry",
+  "domain": "sentry.io",
+  "key_path": [
+    "Sign up at sentry.io/signup (Google/GitHub OAuth or email+password; reCAPTCHA on the page; 14-day Business trial, no card)",
+    "Create org + first project (wizard or UI); org slug is needed for scoped MCP URLs",
+    "Credential: Settings > Developer Settings > Organization Tokens > create (shown once), OR Personal token, OR Internal Integration token for full API scope",
+    "Agent shortcut: `npx @sentry/wizard` or the new `sentry` CLI (`curl https://cli.sentry.dev/install | bash`, then `sentry auth`), which opens the browser and stores the token; legacy `sentry-cli login` only links to the token page for copy-paste"
+  ],
+  "human_gates": [
+    "captcha",
+    "email_verification (social OAuth avoids it)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: new `sentry auth` CLI opens browser ('Opening browser for authentication'); wizard does browser login. Legacy sentry-cli login is a copy/paste flow",
+    "oauth_dcr_for_mcp": "yes: mcp.sentry.dev says 'All connections use OAuth'; clients connect with no pre-registered client id",
+    "provisioning_api_mints_keys": "partial: internal integrations/projects/DSN keys can be created via API once you hold a token; no anonymous provisioning",
+    "scoped_keys": "yes: org tokens (fixed CI scopes), personal tokens with custom scopes, internal-integration tokens with editable scopes; MCP URL can be scoped to /{org}/{project}",
+    "test_dev_instances": "no separate test mode (create extra projects instead)",
+    "free_tier": "yes: free Developer plan, plus a 14-day Business trial with no card",
+    "keyless_claimable_dev_mode": "no"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "https://mcp.sentry.dev/mcp (optionally /{org}/{project}; ?experimental=1)",
+      "transport": "streamable HTTP",
+      "auth": "OAuth"
+    },
+    "local": "npx @sentry/mcp-server (stdio, uses an access token); not re-verified this session",
+    "docs_mcp": "docs-search tools are built into the product MCP",
+    "one_click": "Cursor 'Install MCP Server' button; `npx @sentry/agent-plugin install` sets up skills plus the MCP for Claude Code, Cursor, Codex and Grok in one command"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.sentry.io/llms.txt (contains explicit instructions for agents: install the plugin, don't rely on training data)",
+    "llms_full_txt": "none (404)",
+    "md_pages": "yes, append .md to any docs URL",
+    "openapi": "https://github.com/getsentry/sentry-api-schema (openapi-derefed.json)",
+    "agent_skills": "https://skills.sentry.dev/instrument; sentry-for-ai repo; dotagents package manager",
+    "mcp_llms_txt": "https://mcp.sentry.dev/llms.txt"
+  },
+  "time_to_first_call_minutes": 5,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "score_justification": "OAuth-only remote MCP, an agent plugin that installs everything with one command, and an llms.txt that tells agents what to do. A human still has to sign up and click through the browser.",
+  "best_practice": "llms.txt starts with imperative instructions for agents ('do not rely on training data, run npx @sentry/agent-plugin install'); the MCP can be scoped to an org/project by URL path",
+  "biggest_gap": "No anonymous or claimable path. Three token types confuse agents, and docs.sentry.io/ai/mcp returns 404 (MCP docs live on a separate domain)",
+  "notes": "The legacy sentry-cli docs now point to a new interactive CLI at cli.sentry.dev, so the two CLIs are in transition.",
+  "sources": [
+    "https://docs.sentry.io/llms.txt",
+    "https://docs.sentry.io/ai/agent-plugin.md",
+    "https://docs.sentry.io/account/auth-tokens.md",
+    "https://docs.sentry.io/cli/configuration.md",
+    "https://mcp.sentry.dev",
+    "https://mcp.sentry.dev/llms.txt",
+    "https://cli.sentry.dev",
+    "https://sentry.io/signup/",
+    "https://raw.githubusercontent.com/getsentry/sentry-api-schema/main/openapi-derefed.json"
+  ]
+}

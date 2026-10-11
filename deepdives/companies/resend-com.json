@@ -1,0 +1,60 @@
+{
+  "company": "Resend",
+  "domain": "resend.com",
+  "key_path": [
+    "Sign up at resend.com/signup (email or social login)",
+    "Verify email",
+    "Fastest agent path: connect remote MCP https://mcp.resend.com/mcp -> browser OAuth consent (no key copy needed); MCP/CLI/API can then create API keys",
+    "Alternative: Dashboard > API Keys > Create (Sending access or Full access, optional domain restriction) then `resend login --key re_...`",
+    "Send immediately from onboarding@resend.dev to own address / *@resend.dev test addresses; add + verify a domain (DNS) to send to anyone"
+  ],
+  "human_gates": [
+    "email_verification",
+    "domain_verification (DNS records required to send to arbitrary recipients; sandbox sender only reaches account owner + resend.dev test addresses)",
+    "oauth_consent_click"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "partial - `resend login` stores a pasted key (masked prompt or --key); no browser/device login in CLI; multi-profile `resend auth switch`, `resend whoami`",
+    "oauth_dcr_for_mcp": "yes - OAuth 2.1 + PKCE; DCR at POST https://api.resend.com/oauth/register (unauthenticated, 20/hr/IP) AND Client ID Metadata Documents (client_id_metadata_document_supported=true); remote MCP advertises RFC 9728 metadata",
+    "provisioning_api_mints_keys": "yes - POST /api-keys (API, CLI `resend api-keys create`, and MCP)",
+    "scoped_keys": "yes - full_access vs sending_access, optionally restricted to one domain",
+    "test_credentials_sandbox": "yes - onboarding@resend.dev sender and delivered@/bounced@/complained@resend.dev simulation addresses (count against quota)",
+    "free_tier": "yes - 3,000 emails/mo, 100/day, no card"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": "https://mcp.resend.com/mcp, Streamable HTTP, OAuth (DCR/CIMD)",
+    "product_mcp_local": "yes - local MCP server with RESEND_API_KEY also documented",
+    "docs_mcp": "Mintlify docs (llms.txt + .md); remote MCP is product MCP",
+    "one_click": "Claude connector directory (claude.ai/directory/connectors/resend), `claude plugin install resend@claude-plugins-official`, Cursor `/add-plugin resend`, Codex one-click plugin, VS Code JSON, Hermes/Grok plugins; Agent Plugins spec bundle (MCP + skills)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://resend.com/llms.txt, https://resend.com/docs/llms.txt, https://resend.com/docs/llms-full.txt (2.4MB)",
+    "markdown_pages": "yes - every docs page at .md with 'Documentation Index' header pointing agents to llms.txt",
+    "openapi": "yes - listed under OpenAPI Specs in docs llms.txt",
+    "use_with_ai_page": "https://resend.com/docs/ai-onboarding.md, https://resend.com/docs/cli-agents.md",
+    "agents_md_or_rules": "Agent Skills: resend/resend-skills, resend/resend-cli skill, React Email skill, email best-practices skill, agent inbox skill"
+  },
+  "time_to_first_call_minutes": 3,
+  "time_to_first_call_notes": "Signup + email verify + one OAuth consent click, then agent sends a test email from onboarding@resend.dev. Sending to customers additionally needs DNS verification (minutes if agent has DNS access).",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "agent_friendliness_justification": "Remote OAuth MCP with DCR+CIMD, key-minting API/CLI/MCP, non-interactive JSON CLI with idempotency keys, sandbox sender and free tier; only signup/email verify and domain DNS need a human.",
+  "best_practice": "Ship the CLI with an explicit agent mode (auto JSON on non-TTY, stable error codes, stdin piping, --idempotency-key) and document it on a dedicated 'CLI for AI agents' page.",
+  "biggest_gap": "No agent-initiated signup or device-flow CLI login; production sending still blocked on domain DNS verification.",
+  "sources": [
+    "https://resend.com/llms.txt",
+    "https://resend.com/docs/llms.txt",
+    "https://resend.com/docs/mcp-server.md",
+    "https://resend.com/docs/cli.md",
+    "https://resend.com/docs/cli-agents.md",
+    "https://resend.com/docs/create-an-api-key.md",
+    "https://resend.com/docs/guides/building-a-resend-oauth-client.md",
+    "https://resend.com/docs/api-reference/oauth/register.md",
+    "https://resend.com/docs/ai-onboarding.md",
+    "https://resend.com/docs/dashboard/emails/send-test-emails.md",
+    "https://mcp.resend.com/.well-known/oauth-protected-resource",
+    "https://api.resend.com/.well-known/oauth-authorization-server",
+    "https://resend.com/pricing"
+  ]
+}

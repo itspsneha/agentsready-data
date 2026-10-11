@@ -1,0 +1,71 @@
+{
+  "company": "Google Cloud / Gemini API",
+  "domain": "ai.google.dev",
+  "key_path": [
+    "Gemini API (fastest): sign in to aistudio.google.com with any Google account and accept the ToS. A default Cloud project + API key are auto-created for new users",
+    "Copy the key from aistudio.google.com/apikey. Since 2026-05-28 new keys are 'authorization keys' bound to a service account",
+    "Call generativelanguage.googleapis.com with x-goog-api-key. The free tier needs no card",
+    "CLI alternative: `gcloud auth login` (browser) > `gcloud projects create` > `gcloud services enable generativelanguage.googleapis.com` > create a restricted/auth key via the API Keys API (`gcloud services api-keys create --api-target=service=generativelanguage.googleapis.com`)",
+    "Vertex AI / Cloud MCP: link a billing account (card required) and use ADC via `gcloud auth application-default login`"
+  ],
+  "human_gates": [
+    "phone_otp",
+    "credit_card_required"
+  ],
+  "human_gates_notes": "A Google account sign-in (often with phone verification on new accounts) is the only gate for the AI Studio free tier. A card is needed only for paid tier / Vertex / Cloud. Existing Cloud users must 'import' projects into AI Studio, and IAM permissions (iam.serviceAccounts.create, serviceAccountApiKeyBindings.create) are needed to create auth keys.",
+  "agent_native_auth": {
+    "cli_login": "yes. `gcloud auth login` / `gcloud auth application-default login` browser flow (and --no-browser remote flow)",
+    "oauth_dcr_for_mcp": "no. Cloud remote MCP servers explicitly do NOT support dynamic client registration; Claude/Cursor/ChatGPT need a manually created OAuth web client ID+secret. The Gemini Docs MCP needs no auth",
+    "provisioning_api_mint_keys": "yes. API Keys API / gcloud services api-keys, service-account-bound auth keys",
+    "scoped_keys": "yes. API-target restrictions; auth keys restricted to Generative Language API by default; unrestricted standard keys rejected",
+    "sandbox_test_credentials": "free tier serves as the sandbox",
+    "free_tier": "yes. Gemini API free tier with no card"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://gemini-api-docs-mcp.dev",
+      "transport": "Streamable HTTP",
+      "auth": "none",
+      "tools": [
+        "gemini_search_docs",
+        "gemini_get_doc"
+      ],
+      "install": "`npx add-mcp \"https://gemini-api-docs-mcp.dev\"` auto-configures detected agents; `claude mcp add --transport http geminiDocs https://gemini-api-docs-mcp.dev`"
+    },
+    "product_mcp": {
+      "url": "Google Cloud remote MCP servers per service, e.g. https://bigquery.googleapis.com/mcp, https://aiplatform.googleapis.com/mcp/models, Compute Engine, GKE, Maps",
+      "transport": "Streamable HTTP",
+      "auth": "OAuth 2.0 client ID/secret (manual), ADC, or bearer from `gcloud auth application-default print-access-token`",
+      "enable": "`gcloud beta services mcp enable SERVICE --project=PROJECT`; needs roles/mcp.toolUser"
+    },
+    "plugin": "Gemini API plugin for Antigravity bundles the docs MCP, skills and API-key tools (`agy plugin install https://github.com/google-gemini/gemini-skills`)",
+    "skills": "`npx skills add google-gemini/gemini-skills --skill gemini-api-dev --global`",
+    "one_click_install": "yes-ish. `npx add-mcp` one-liner; Antigravity plugin"
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes. https://ai.google.dev/gemini-api/docs/llms.txt (root ai.google.dev/llms.txt 404; cloud.google.com/llms.txt returns an HTML page with 200, a soft-404)",
+    "llms_full_txt": "no (404)",
+    "markdown_pages": "yes. Every page has a .md.txt variant (e.g. /gemini-api/docs/api-key.md.txt)",
+    "openapi": "Google discovery documents (generativelanguage.googleapis.com/$discovery/rest)",
+    "use_with_ai_page": "yes. https://ai.google.dev/gemini-api/docs/coding-agents"
+  },
+  "time_to_first_call_minutes": {
+    "gemini_api_ai_studio": 2,
+    "vertex_or_cloud_mcp": 20
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "A key is auto-provisioned on first AI Studio visit with a no-card free tier, plus gcloud CLI, a keys API, scoped auth keys, a docs MCP with an add-mcp one-liner, skills and .md.txt pages. Docked only because Cloud MCP lacks DCR.",
+  "best_practice": "Auto-creating a default project + API key the moment a user accepts ToS, plus a 'Coding agent setup' page that ships skills, a docs MCP and machine-readable docs together",
+  "biggest_gap": "Cloud remote MCP servers require a hand-made OAuth client (no DCR) for Claude/Cursor. Also the key-type migration (unrestricted standard keys rejected) breaks older agent-generated code",
+  "sources": [
+    "https://ai.google.dev/gemini-api/docs/llms.txt",
+    "https://ai.google.dev/gemini-api/docs/coding-agents.md.txt",
+    "https://ai.google.dev/gemini-api/docs/api-key.md.txt",
+    "https://docs.cloud.google.com/mcp/configure-mcp-ai-application",
+    "https://docs.cloud.google.com/mcp/enable-disable-mcp-servers",
+    "https://docs.cloud.google.com/mcp/manage-mcp-servers",
+    "https://aistudio.google.com/apikey"
+  ]
+}

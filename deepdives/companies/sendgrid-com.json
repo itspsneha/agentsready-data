@@ -1,0 +1,57 @@
+{
+  "company": "SendGrid (Twilio SendGrid)",
+  "domain": "sendgrid.com",
+  "key_path": [
+    "Sign up at signup.sendgrid.com (starts 60-day free trial)",
+    "Verify email",
+    "Enable mandatory 2FA (SMS or Authy)",
+    "Complete account/profile questionnaire",
+    "Settings > API Keys > Create (Restricted: Mail Send full access)",
+    "Verify sender identity: Single Sender verification (click email link) or Domain Authentication (DNS CNAMEs) before any mail sends"
+  ],
+  "human_gates": [
+    "email_verification",
+    "2fa (mandatory, SMS/Authy)",
+    "phone_otp (via 2FA setup)",
+    "domain_verification or single_sender_email_verification",
+    "manual_approval (new-account review/compliance can suspend or limit accounts)",
+    "credit_card_required (after 60-day trial; free plan retired)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "no SendGrid-specific CLI login (Twilio CLI does not cover SendGrid keys)",
+    "oauth_dcr_for_mcp": "no",
+    "provisioning_api_mints_keys": "yes - POST /v3/api_keys; Subuser API for partner provisioning (needs an existing key with api_keys scope)",
+    "scoped_keys": "yes - Full, Restricted (granular scopes), Billing",
+    "test_credentials_sandbox": "partial - mail_settings.sandbox_mode validates requests without delivering; no test key",
+    "free_tier": "no permanent free tier; 60-day trial at 100 emails/day"
+  },
+  "mcp": {
+    "official": "docs only - SendGrid docs are indexed by Twilio's docs MCP (https://mcp.twilio.com/docs, no auth). No official product MCP; only community servers",
+    "product_mcp_remote": "none",
+    "product_mcp_local": "none official",
+    "one_click": "via Twilio's Claude connector / Cursor plugin (docs only)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "no SendGrid-specific llms.txt (docs.sendgrid.com/llms.txt and twilio.com/docs/sendgrid/llms.txt 404); SendGrid pages included in https://www.twilio.com/docs/llms.txt",
+    "markdown_pages": "yes - twilio.com/docs/sendgrid/... .md pages",
+    "openapi": "yes - twilio/sendgrid-oai on GitHub",
+    "use_with_ai_page": "no SendGrid-specific page; covered by twilio.com/docs/ai",
+    "agents_md_or_rules": "no"
+  },
+  "time_to_first_call_minutes": 20,
+  "time_to_first_call_notes": "Signup, 2FA enrollment, key creation and single-sender verification are all human clicks; domain auth adds DNS propagation.",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 3,
+  "agent_friendliness_justification": "Good API and scoped keys, but mandatory 2FA, sender verification, trial-only free plan, and no product MCP or agent auth make it one of the most human-gated email APIs.",
+  "best_practice": "Granular Restricted API key scopes plus sandbox_mode on the send call for safe agent testing.",
+  "biggest_gap": "No product MCP, no OAuth/CLI login, and 2FA is mandatory before you can even mint a key.",
+  "sources": [
+    "https://www.twilio.com/docs/sendgrid/for-developers/sending-email/quickstart-nodejs.md",
+    "https://www.twilio.com/docs/sendgrid/ui/account-and-settings/upgrading-your-plan.md",
+    "https://www.twilio.com/docs/sendgrid/api-reference/api-keys/create-api-keys.md",
+    "https://www.twilio.com/docs/llms.txt",
+    "https://www.twilio.com/docs/ai/mcp.md",
+    "https://docs.sendgrid.com/llms.txt",
+    "https://mailtrap.io/blog/best-email-mcp-servers/"
+  ]
+}

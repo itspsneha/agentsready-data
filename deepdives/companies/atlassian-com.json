@@ -1,0 +1,61 @@
+{
+  "company": "Atlassian (Jira/Confluence)",
+  "domain": "atlassian.com",
+  "key_path": [
+    "Sign up for Jira Cloud Free (atlassian.com/software/jira/free) with Google/Microsoft/Apple OAuth or email",
+    "Verify email (if email signup) and choose site name (<site>.atlassian.net)",
+    "Go to https://id.atlassian.com/manage-profile/security/api-tokens",
+    "Re-verify identity (required for password/third-party logins before token creation; re-prompted after 30 min idle)",
+    "Create API token (classic or 'with scopes'), set expiry 1-365 days, copy",
+    "Call https://<site>.atlassian.net/rest/api/3/myself with Basic base64(email:token)"
+  ],
+  "human_gates": [
+    "email_verification",
+    "2fa"
+  ],
+  "human_gates_notes": "Identity re-verification step before token creation (email code). Rovo MCP API-token auth must be enabled by org admin; org admins can block MCP/ restrict domains. SSO/service-account users skip verification.",
+  "agent_native_auth": {
+    "cli_device_login": "partial - Atlassian CLI (acli) has 'acli jira auth login --web'; not verified in this pass",
+    "mcp_oauth_dcr": "yes - v2 auth server advertises /dcr/register and client_id_metadata_document_supported=true (verified)",
+    "personal_access_tokens": "yes - API tokens (Basic auth), max 1 year expiry",
+    "scoped_tokens": "yes - 'Create API token with scopes' (granular Jira/Confluence scopes)",
+    "management_api_mints_keys": "partial - service accounts with API keys via admin; no self-serve key-minting API for users",
+    "free_tier_or_sandbox": "yes - Jira/Confluence Free (10 users); developer sandbox via go.atlassian.com/cloud-dev"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.atlassian.com/v2/mcp (v1 still responds 401; Claude directory entry still points at /v1/mcp)",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.1 with DCR; or API token (Basic email:token) / service-account API key (Bearer) if org admin enables API-token auth"
+    },
+    "local": "none official (community sooperset/mcp-atlassian)",
+    "type": "product MCP (Rovo MCP: Jira, Confluence, Compass, Teamwork Graph)",
+    "one_click_install": "marketplace extensions / documented setup for VS Code+Copilot, Cursor, Claude Code, Claude Desktop, Codex, Windsurf",
+    "claude_directory": true,
+    "chatgpt_directory": "not verified"
+  },
+  "docs_for_agents": {
+    "llms_txt": "not found (developer.atlassian.com/llms.txt and support.atlassian.com/llms.txt both 404)",
+    "llms_full_txt": "not found",
+    "markdown_pages": "not found",
+    "openapi": "https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json (200)",
+    "ai_page": "https://developer.atlassian.com/cloud/rovo-mcp/",
+    "agents_md_or_rules": "not found"
+  },
+  "time_to_first_call_minutes": 8,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "Solid scoped tokens and a DCR MCP, but identity re-verification before token creation, admin toggle for MCP token auth, credit-metered Rovo tools, and no llms.txt.",
+  "best_practice": "Scoped API tokens with mandatory expiry (1-365 days) plus a service-account API key path for headless MCP.",
+  "biggest_gap": "No llms.txt/markdown docs and MCP API-token auth is off until an org admin flips it; v1->v2 URL churn leaves directory listings stale.",
+  "sources": [
+    "https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/",
+    "https://developer.atlassian.com/cloud/rovo-mcp/guides/getting-started/",
+    "https://developer.atlassian.com/cloud/rovo-mcp/guides/configuring-authentication-via-api-token/",
+    "https://support.atlassian.com/security-and-access-policies/docs/control-atlassian-mcp-server-settings/",
+    "https://mcp.atlassian.com/.well-known/oauth-protected-resource/v2/mcp",
+    "https://auth.atlassian.com/VCeDsk8ZHncYF1g234fKtc4lNipbBhu3/.well-known/oauth-authorization-server",
+    "https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json"
+  ]
+}

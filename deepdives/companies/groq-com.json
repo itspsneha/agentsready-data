@@ -1,0 +1,53 @@
+{
+  "company": "Groq",
+  "domain": "groq.com",
+  "key_path": [
+    "Sign up at console.groq.com (email or Google OAuth)",
+    "Verify email (email signups)",
+    "Free tier is on immediately with no card",
+    "console.groq.com/keys > Create API Key (project-scoped)",
+    "export GROQ_API_KEY and call the OpenAI-compatible endpoint"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "no (no Groq CLI)",
+    "oauth_dynamic_client_registration": "no",
+    "provisioning_api_mints_keys": "no documented key-management API",
+    "scoped_keys": "partial. Project-scoped keys, per-project model permissions and rate limits, spend limits",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "yes. Free tier, rate-limited, no card"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": "none official (only community 'groq-docs-mcp'). console.groq.com/docs/mcp is about Groq *consuming* remote MCP (beta)",
+    "product_mcp": "no remote server",
+    "local_package": "uvx groq-mcp (github.com/groq/groq-mcp-server, 46 stars, last push 2026-08-19) with inference, vision, TTS, STT and batch tools, plus groq/compound-mcp-server. Both need an API key in env",
+    "one_click_install": "no; README config JSON plus a `groq-mcp-config` helper"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://console.groq.com/llms.txt",
+    "llms_full_txt": "https://console.groq.com/llms-full.txt",
+    "markdown_pages": "yes, append .md",
+    "openapi": "no public spec URL found",
+    "agents_md_or_rules": "'Coding with Groq' pages for Cline, OpenCode, Factory Droid"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "Fastest human path (free, no card, no phone) with good llms files, but no CLI login, key API, remote MCP or docs MCP.",
+  "best_practice": "Free tier with no card and no phone. One email or Google click gets a usable key in about 2 minutes.",
+  "biggest_gap": "There is no agent-native auth at all, and the only MCP is a local uvx package that needs a pasted key.",
+  "notes_out_of_date": "groq-mcp README references compound-beta and PlayAI voices, which may be renamed or retired.",
+  "sources": [
+    "https://console.groq.com/llms.txt",
+    "https://console.groq.com/llms-full.txt",
+    "https://console.groq.com/docs/quickstart.md",
+    "https://console.groq.com/docs/mcp.md",
+    "https://console.groq.com/docs/projects.md",
+    "https://github.com/groq/groq-mcp-server",
+    "https://community.groq.com/t/is-there-a-free-tier-and-what-are-its-limits/790",
+    "https://docs.stackone.com/connectors/groq/guides/link-account/api-key.md"
+  ]
+}

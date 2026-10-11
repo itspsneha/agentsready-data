@@ -1,0 +1,57 @@
+{
+  "company": "Linear",
+  "domain": "linear.app",
+  "key_path": [
+    "Sign up at linear.app with Google OAuth (or email magic link/code)",
+    "Create workspace (name + URL slug) during onboarding",
+    "Settings > Account > Security & access > Personal API keys > New key (optionally read-only / team-scoped)",
+    "Call https://api.linear.app/graphql with header 'Authorization: <API_KEY>'"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "human_gates_notes": "Email gate disappears with Google OAuth (then it is an OAuth consent click). No card, no phone. In existing workspaces admins can restrict member API key creation.",
+  "agent_native_auth": {
+    "cli_device_login": "no (no official general CLI; only the CLI importer)",
+    "mcp_oauth_dcr": "yes - mcp.linear.app advertises registration_endpoint /register and client_id_metadata_document_supported=true (verified 2026-10-11)",
+    "personal_access_tokens": "yes - personal API keys, can be limited to read-only",
+    "scoped_tokens": "yes - read/write scopes on keys and OAuth (read, write, issues:create, admin, plus actor=app)",
+    "management_api_mints_keys": "no public key-minting API; OAuth app manifests exist for app creation",
+    "free_tier_or_sandbox": "yes - Free plan"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.linear.app/mcp (also /mcp/readonly; legacy /sse)",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.1 with DCR, OR Authorization: Bearer <Linear API key>"
+    },
+    "local": "none official (use npx mcp-remote for stdio-only clients)",
+    "type": "product MCP",
+    "one_click_install": "Cursor deeplink on docs page; Claude connectors directory; VS Code via MCP: Add Server",
+    "claude_directory": true,
+    "chatgpt_directory": "not verified"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://linear.app/llms.txt (200)",
+    "llms_full_txt": "not found",
+    "markdown_pages": "yes - .md variants e.g. https://linear.app/docs/mcp.md, https://linear.app/developers/graphql.md",
+    "openapi": "n/a - GraphQL schema (introspection + public schema on GitHub)",
+    "ai_page": "https://linear.app/docs/mcp; developers/agents (Agents API)",
+    "agents_md_or_rules": "not found"
+  },
+  "time_to_first_call_minutes": 4,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "Google-OAuth signup, one-screen API key, and an MCP server that takes both OAuth-DCR and a plain API key bearer; read-only MCP URL is a nice safety rail.",
+  "best_practice": "MCP accepts the same personal API key as a bearer header (plus a dedicated /mcp/readonly endpoint), so headless agents never need a browser OAuth dance.",
+  "biggest_gap": "No official CLI with device login and no llms-full.txt; API key creation still requires clicking through the web settings UI.",
+  "sources": [
+    "https://linear.app/llms.txt",
+    "https://linear.app/docs/mcp",
+    "https://linear.app/docs/mcp.md",
+    "https://linear.app/developers/graphql.md",
+    "https://mcp.linear.app/.well-known/oauth-protected-resource",
+    "https://mcp.linear.app/.well-known/oauth-authorization-server"
+  ]
+}

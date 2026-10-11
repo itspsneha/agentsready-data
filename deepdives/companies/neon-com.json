@@ -1,0 +1,57 @@
+{
+  "company": "Neon",
+  "domain": "neon.com (neon.tech now 308-redirects to neon.com)",
+  "key_path": [
+    "zero-account: POST https://claimable.neon.tech/v1/agent/identity {type:anonymous, capabilities:[postgres,data_api,auth], source:<agent>} returns identity_assertion + project",
+    "exchange the assertion (jwt-bearer grant) at /v1/oauth2/token for a bearer token; GET /v1/projects/{id}/credentials returns DATABASE_URL (or CLI: `neon claim create` writes .env)",
+    "later: `neon claim accept --no-open` / POST /claim returns a verification_uri_complete; human signs in and accepts the transfer (code TTL 900s, project TTL 72h)",
+    "with an account: `npm i -g neon && neon login` (browser OAuth) then `neon api-keys create` mints an API key from the CLI",
+    "MCP: `npx neon@latest mcp` (writes config for detected agents) or the Claude connector directory, OAuth"
+  ],
+  "human_gates": [
+    "none for a claimable project",
+    "browser sign-in only to claim / for a permanent account",
+    "email_verification if email signup"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `neon login` browser OAuth (`neon auth` legacy alias); NEON_API_KEY / --api-key for headless",
+    "mcp_oauth_dcr": "yes: registration_endpoint https://mcp.neon.tech/api/register",
+    "provisioning_api_mints_keys": "yes: `neon api-keys create` / API key endpoints; org and project-scoped keys",
+    "scoped_tokens": "yes: org/project-scoped API keys. MCP read-only scope chosen at OAuth consent, plus ?readonly, ?projectId, ?category URL params",
+    "free_tier": "yes, no card",
+    "claimable_anonymous": "yes, best in class: Claimable Neon (https://neon.com/auth.md). Anonymous agent identity, a 72h Postgres project with Data API and Auth, device-code-style claim transfer that rotates DATABASE_URL"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.neon.tech/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth DCR or API key bearer"
+    },
+    "local": "`npx neon@latest mcp` installer; `neon plugins` bundles MCP + skills",
+    "type": "product (projects, branches, SQL, migrations, inspect_database diagnostics) + docs resources",
+    "one_click": "official Claude connector (Browse connectors > Neon); config generator; CLI installer into all agents; unauthenticated tool listing at https://mcp.neon.tech/api/list-tools"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://neon.com/llms.txt (opens with agent routing: 'If the user cannot create an account right now, follow Claimable Neon')",
+    "llms_full_txt": "https://neon.com/llms-full.txt",
+    "markdown_pages": "yes: append .md or send Accept: text/markdown",
+    "openapi": "Neon API v2 OpenAPI (https://neon.com/docs/reference/api.md links the spec)",
+    "use_with_ai_page": "https://neon.com/auth.md, https://neon.com/docs/get-started/with-an-agent.md; `neon init` installs agent skills"
+  },
+  "time_to_first_call_minutes": 1,
+  "fully_autonomous_possible": true,
+  "agent_friendliness_score": 10,
+  "score_justification": "An agent can get a working Postgres connection string over plain REST in seconds with no account, then hand ownership over via a device-code claim. The CLI mints API keys, and the MCP has DCR plus scoping params.",
+  "best_practice": "auth.md: a spec-like, agent-addressed provisioning procedure (anonymous identity, jwt-bearer token, credentials, device-code claim) that is reachable straight from llms.txt",
+  "biggest_gap": "Unclaimed projects die at 72h and DATABASE_URL rotates on claim, so the agent must re-fetch credentials. The domain move from neon.tech and the CLI rename from neonctl to neon may confuse agents trained on older data",
+  "sources": [
+    "https://neon.com/llms.txt",
+    "https://neon.com/auth.md",
+    "https://neon.com/docs/ai/neon-mcp-server.md",
+    "https://neon.com/docs/cli/login.md",
+    "https://neon.com/docs/reference/claimable-neon",
+    "https://mcp.neon.tech/.well-known/oauth-authorization-server",
+    "https://console.neon.tech/signup"
+  ]
+}

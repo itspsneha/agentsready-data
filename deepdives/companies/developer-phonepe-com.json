@@ -1,0 +1,56 @@
+{
+  "company": "PhonePe (Payment Gateway)",
+  "domain": "developer.phonepe.com",
+  "key_path": [
+    "Register at business.phonepe.com/pg/register with mobile number + OTP",
+    "Enter business details: PAN, business type, GSTIN (if applicable), bank account, website/app URL",
+    "Open PhonePe Business Dashboard > Developer Settings and copy the Client ID + Client Secret (+ client_version)",
+    "POST client credentials to the token endpoint: UAT https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token, prod https://api.phonepe.com/apis/identity-manager/v1/oauth/token. This returns an O-Bearer access_token with expires_at and must be refreshed",
+    "Test in the UAT sandbox using templates, test cards and mock OTP 123456",
+    "Go-live: KYC documents reviewed + website compliance check by PhonePe before production transactions"
+  ],
+  "human_gates": [
+    "phone_otp",
+    "kyc_business_verification",
+    "manual_approval",
+    "regulatory_registration"
+  ],
+  "human_gates_notes": "PhonePe is an RBI-licensed Payment Aggregator, so merchant KYC/due diligence is mandatory for production. The docs do not clearly say whether UAT credentials are self-serve without KYC. The authorization page says keys come from Developer Settings on the dashboard.",
+  "agent_native_auth": {
+    "cli_login": "no",
+    "oauth_dcr_for_mcp": "no (no MCP)",
+    "provisioning_api_mint_keys": "no",
+    "scoped_keys": "no evidence",
+    "sandbox_test_credentials": "yes. UAT sandbox host api-preprod.phonepe.com/apis/pg-sandbox with configurable success/failure/pending templates, test cards, PhonePe Test App (iOS test app requires emailing the integration team)",
+    "free_tier": "yes in the sense that there is no signup fee; pricing is per transaction (MDR)"
+  },
+  "mcp": {
+    "official": false,
+    "remote": null,
+    "local": null,
+    "notes": "No official PhonePe MCP found as of 2026-10-11. Only community servers (e.g. glama.ai listings, an 'India Payments MCP' that routes through Razorpay). Competitors Razorpay and Cashfree have shipped official MCPs.",
+    "one_click_install": "no"
+  },
+  "docs_for_agents": {
+    "llms_txt": "no (developer.phonepe.com/llms.txt 404)",
+    "markdown_pages": "no",
+    "openapi": "no public OpenAPI found. Backend SDKs exist for Java, Python, Node and PHP",
+    "use_with_ai_page": "no"
+  },
+  "time_to_first_call_minutes": {
+    "uat_if_dashboard_access_granted": 20,
+    "production": "days (KYC review)"
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 3,
+  "score_justification": "The OAuth client-credentials API and a decent sandbox are usable, but there is no MCP, llms.txt or OpenAPI, and signup is phone-OTP plus business KYC gated.",
+  "best_practice": "A sandbox with configurable response templates (success/failure/pending) lets an agent test every payment branch deterministically",
+  "biggest_gap": "No agent surface at all: no MCP, no machine-readable docs, and an unclear path to test credentials without a KYC'd merchant account",
+  "sources": [
+    "https://developer.phonepe.com/payment-gateway",
+    "https://developer.phonepe.com/payment-gateway/website-integration/standard-checkout/api-integration/api-reference/authorization",
+    "https://developer.phonepe.com/payment-gateway/uat-testing-go-live/uat-sandbox",
+    "https://business.phonepe.com/pg/register",
+    "https://inc42.com/?p=520462"
+  ]
+}

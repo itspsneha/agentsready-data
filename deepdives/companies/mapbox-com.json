@@ -1,0 +1,55 @@
+{
+  "company": "Mapbox",
+  "domain": "mapbox.com",
+  "key_path": [
+    "Fastest: connect hosted MCP https://mcp.mapbox.com/mcp (or DevKit https://mcp-devkit.mapbox.com/mcp) -> browser OAuth page offers 'Start without a card' sign-up",
+    "Verify email (link valid 24h)",
+    "Console shows default public token (pk.*) / trial token - usable immediately",
+    "Optional: Tokens API (needs a token with tokens:write) or local DevKit create_token_tool to mint scoped/temporary tokens"
+  ],
+  "human_gates": [
+    "email_verification",
+    "oauth_consent_click",
+    "credit_card_required (only to lift demo-access caps / unlock some products)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "no official account CLI",
+    "oauth_dcr_for_mcp": "yes - mcp.mapbox.com publishes RFC 9728 + RFC 8414 metadata with registration_endpoint https://api.mapbox.com/oauth/register, PKCE S256; signup can happen inside the MCP OAuth flow",
+    "provisioning_api_mints_keys": "yes - Tokens API create/temporary tokens (tokens:write); DevKit create_token_tool (local only, 1h temp tokens)",
+    "scoped_keys": "yes - public/secret scopes, URL restrictions, temporary tokens",
+    "test_credentials_sandbox": "no sandbox; demo access with usage caps acts as a free trial",
+    "free_tier": "yes - card-free demo access (e.g. 5,000 web map loads, 10,000 Directions/Geocoding) and larger free tiers once a card is added"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": "https://mcp.mapbox.com/mcp (geospatial tools: geocoding, directions, isochrones, static maps) and https://mcp-devkit.mapbox.com/mcp (styles, tokens, docs), Streamable HTTP, OAuth",
+    "product_mcp_local": "npx -y @mapbox/mcp-server and @mapbox/mcp-devkit-server with MAPBOX_ACCESS_TOKEN",
+    "docs_mcp": "DevKit MCP includes docs access",
+    "one_click": "config snippets for Claude/Cursor/VS Code (mcp-remote bridge); Agent Skills `npx skills add mapbox/mapbox-agent-skills`"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.mapbox.com/llms.txt (root index linking per-product llms.txt e.g. /mapbox-gl-js/llms.txt, /accounts/llms.txt)",
+    "markdown_pages": "yes - API reference and guides at .md (e.g. /api/maps/styles.md, /accounts/guides/signup.md)",
+    "openapi": "not found as a published spec",
+    "use_with_ai_page": "https://docs.mapbox.com/api/guides/mcp-server/, devkit-mcp-server/, mapbox-agent-skills/",
+    "agents_md_or_rules": "mapbox/mapbox-agent-skills repo"
+  },
+  "time_to_first_call_minutes": 3,
+  "time_to_first_call_notes": "One OAuth flow both creates the account (card-free) and connects the MCP; human only verifies email.",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "agent_friendliness_justification": "Sign-up embedded in the hosted MCP OAuth flow, card-free demo access, DCR and token-minting API; lacks a CLI and OpenAPI spec, and token creation tool is disabled on the hosted endpoint.",
+  "best_practice": "Account creation inside the MCP OAuth screen ('Start without a card') so 'connect the MCP' and 'sign up' are the same step.",
+  "biggest_gap": "No CLI/device login and hosted DevKit cannot mint tokens, so app code still needs a human to copy a token from the console.",
+  "sources": [
+    "https://docs.mapbox.com/llms.txt",
+    "https://docs.mapbox.com/api/guides/mcp-server/",
+    "https://docs.mapbox.com/api/guides/devkit-mcp-server/",
+    "https://docs.mapbox.com/api/guides/mapbox-agent-skills/",
+    "https://docs.mapbox.com/accounts/guides/signup.md",
+    "https://docs.mapbox.com/accounts/guides/demo-access.md",
+    "https://docs.mapbox.com/api/accounts/tokens/",
+    "https://mcp.mapbox.com/.well-known/oauth-protected-resource",
+    "https://mcp.mapbox.com/.well-known/oauth-authorization-server"
+  ]
+}

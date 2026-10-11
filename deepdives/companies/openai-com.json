@@ -1,0 +1,66 @@
+{
+  "company": "OpenAI",
+  "domain": "openai.com",
+  "key_path": [
+    "Sign up at platform.openai.com (email+password, Google, Microsoft or Apple)",
+    "Verify email (email signups only)",
+    "Phone verification by SMS OTP, required before the FIRST API key (secondary sources)",
+    "Add a card and buy prepaid credits (minimum $5). The $5 free trial is gone for new accounts",
+    "Dashboard > API keys > Create new secret key (project-scoped)",
+    "export OPENAI_API_KEY and call the Responses API"
+  ],
+  "human_gates": [
+    "email_verification",
+    "phone_otp",
+    "credit_card_required",
+    "kyc_business_verification (Organization ID verification, only for some gated models)"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "partial. `codex login` signs in with ChatGPT through the browser, but that is Codex usage, not a general API-key CLI. There is no `openai login` that mints keys",
+    "oauth_dynamic_client_registration": "yes (preview). In Sign in with ChatGPT 'ChatGPT plan usage', an open-source or local agent registers itself with client_id=dynamic_agent_client plus PKCE and a loopback redirect. It gets an OAuth access token that can call the Responses API billed to the user's ChatGPT plan, with no API key and no card. Paid or hosted apps must fill in an interest form",
+    "provisioning_api_mints_keys": "partial. The Admin API (needs an Admin key created by hand in the dashboard) manages projects, service accounts and keys. Project service-account creation returns an API key, and Terraform guides cover this",
+    "scoped_keys": "yes. Keys are project-scoped and can be restricted (read-only or per-endpoint permissions), plus project IP allowlists",
+    "test_mode_sandbox": "no",
+    "free_credits_or_tier": "no for new API accounts (prepaid). ChatGPT-plan usage through SIWC is the only 'free to the developer' path"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://developers.openai.com/mcp",
+      "transport": "streamable HTTP",
+      "auth": "none",
+      "scope": "read-only search and fetch over developers.openai.com, platform.openai.com and learn.chatgpt.com"
+    },
+    "product_mcp": "none for the API platform (no MCP for keys, usage or files). OpenAI is a big MCP *consumer* (Responses API remote MCP, Apps SDK, Secure MCP Tunnel)",
+    "local_package": "none",
+    "one_click_install": "VS Code install link and a `codex mcp add` one-liner on the Docs MCP page. The page also suggests an AGENTS.md snippet telling Codex to always use the server"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.openai.com/llms.txt (hierarchical: /api/llms.txt -> /api/docs/llms.txt and /api/reference/llms.txt). Note: platform.openai.com/llms.txt is 404",
+    "llms_full_txt": "https://developers.openai.com/api/llms-full.txt",
+    "markdown_pages": "yes, append .md to any developers.openai.com page",
+    "openapi": "https://github.com/openai/openai-openapi (pushed 2026-10-09)",
+    "agents_md_or_rules": "AGENTS.md snippet on the Docs MCP page"
+  },
+  "time_to_first_call_minutes": 8,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Best-in-class docs for agents plus a novel agent-registration OAuth flow, but the plain API-key path still needs a phone OTP and a prepaid card.",
+  "best_practice": "The 'dynamic_agent_client' OAuth registration lets an agent install register itself and run on the user's existing ChatGPT plan with no API key or billing setup.",
+  "biggest_gap": "The standard key path still needs phone OTP and prepaid credit before the first call, and there is no product MCP for account or key operations.",
+  "notes_out_of_date": "Many third-party guides still quote the $5 free trial, which is no longer offered. Docs moved from platform.openai.com/docs to developers.openai.com/api.",
+  "sources": [
+    "https://developers.openai.com/llms.txt",
+    "https://developers.openai.com/api/llms.txt",
+    "https://developers.openai.com/api/docs/llms.txt",
+    "https://developers.openai.com/api/docs/quickstart.md",
+    "https://developers.openai.com/learn/docs-mcp.md",
+    "https://developers.openai.com/api/docs/guides/admin-apis.md",
+    "https://developers.openai.com/siwc/llms.txt",
+    "https://developers.openai.com/siwc/token-sharing-open-source.md",
+    "https://developers.openai.com/siwc/token-sharing-open-source/sign-in.md",
+    "https://github.com/openai/openai-openapi",
+    "https://cloudinsight.cc/en/blog/openai-api-registration",
+    "https://windowscentral.com/software-apps/how-to-get-an-openai-api-key"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "company": "MSG91",
+  "domain": "msg91.com",
+  "key_path": [
+    "Sign up at msg91.com with email + mobile number. Verify the mobile via OTP and verify email",
+    "Log in to the MSG91 panel > Authkey (top bar)",
+    "Re-verify the registered mobile number with OTP to access the Authkey section",
+    "Create New: name it, pick 'Where are you integrating', attach a Rule (service-scoped permissions), whitelist IPs (IP security is ON by default)",
+    "Add balance / buy credits for real sends; a small free trial credit is typical",
+    "For SMS to Indian numbers: complete TRAI DLT registration (Principal Entity ID on an operator DLT portal, header/sender ID and template approval) and map DLT template IDs in MSG91 before production SMS. WhatsApp needs Meta Business verification"
+  ],
+  "human_gates": [
+    "phone_otp",
+    "email_verification",
+    "regulatory_registration",
+    "manual_approval",
+    "credit_card_required"
+  ],
+  "human_gates_notes": "Phone OTP is needed both at signup AND again to view/create authkeys. DLT (TRAI TCCCPR) registration is mandatory for Indian commercial SMS, and templates are approved by telcos. 'credit_card_required' here means prepaid balance for live traffic.",
+  "agent_native_auth": {
+    "cli_login": "no",
+    "oauth_dcr_for_mcp": "no",
+    "provisioning_api_mint_keys": "no",
+    "scoped_keys": "yes. Authkey Rules restrict a key to selected services, plus an IP whitelist",
+    "sandbox_test_credentials": "no dedicated sandbox found",
+    "free_tier": "trial credits only"
+  },
+  "mcp": {
+    "official": false,
+    "remote": null,
+    "local": null,
+    "notes": "No official MSG91 MCP found (docs.msg91.com/mcp 404; mcp.msg91.com does not resolve to a service). Third-party wrappers exist via Composio and n8n.",
+    "one_click_install": "no"
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes but weak. https://docs.msg91.com/llms.txt has ~144 endpoint links with EMPTY descriptions, titled 'LLM Usage Policy'",
+    "llms_full_txt": "no (404)",
+    "markdown_pages": "no (.md returns 404; docs are a Next.js app on techdoc.walkover.in)",
+    "openapi": "no public OpenAPI URL found",
+    "use_with_ai_page": "no"
+  },
+  "time_to_first_call_minutes": {
+    "otp_or_email_api_call": 15,
+    "production_sms_india": "days (DLT approval)"
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 3,
+  "score_justification": "Scoped, IP-locked authkeys are good hygiene, but OTP walls (twice), DLT registration, no MCP and an llms.txt with no descriptions make it hard for agents.",
+  "best_practice": "Rule-scoped authkeys with an IP whitelist on by default, which limits the blast radius of an agent-held key",
+  "biggest_gap": "Phone-OTP re-verification just to view or create a key, and a stub llms.txt with no descriptions or markdown pages",
+  "sources": [
+    "https://docs.msg91.com/llms.txt",
+    "https://msg91.com/help/MSG91/where-can-i-find-my-authentication-key",
+    "https://docs.n8n.io/integrations/builtin/credentials/msg91",
+    "https://landing-new-git-claude-festive-leakey-b55a41.preview.composio.dev/toolkits/msg91/framework/claude-code"
+  ]
+}

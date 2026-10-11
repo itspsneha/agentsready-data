@@ -1,0 +1,62 @@
+{
+  "company": "Zoho",
+  "domain": "zoho.com",
+  "key_path": [
+    "Sign up for a Zoho account (email or Google/Microsoft/LinkedIn sign-in). Verify email; Indian signups typically also verify a mobile OTP",
+    "Pick the right data center (accounts.zoho.com / .in / .eu etc.). Every API host is DC-specific",
+    "API: go to api-console.zoho.com > Add Client > Self Client (or Server-based for redirect flow)",
+    "Generate a grant code with explicit scopes (e.g. ZohoCRM.modules.ALL), valid 3-10 minutes",
+    "POST to accounts.zoho.<dc>/oauth/v2/token to exchange for refresh_token + access_token (access token lasts 1h; refresh is long-lived)",
+    "MCP alternative: sign up at zoho.com/mcp > Create MCP Server > select Zoho/third-party apps and tools > authorize each app connection via OAuth > copy the server URL (https://<name>-<orgid>.zohomcp.com/mcp/<key>/message)"
+  ],
+  "human_gates": [
+    "email_verification",
+    "phone_otp",
+    "2fa"
+  ],
+  "human_gates_notes": "No card for free plans or trials. Grant-code generation in the API console is a manual UI step. 2FA (OneAuth) is often enforced by org admins. No regulatory gate for API use.",
+  "agent_native_auth": {
+    "cli_login": "partial. Zoho Catalyst CLI and the ZET (Zoho Extension Toolkit) CLI log in via browser, but there is no general 'zoho login' CLI that mints CRM/Books tokens",
+    "oauth_dcr_for_mcp": "partial. The Zoho MCP server supports OAuth when added as a Claude custom connector (Claude detects the OAuth flow), and the URL also embeds a key",
+    "provisioning_api_mint_keys": "no",
+    "scoped_keys": "yes. OAuth scopes are granular per module/operation, and Zoho MCP servers expose only the tools you select",
+    "sandbox_test_credentials": "yes for some products (Zoho CRM sandbox, developer edition, Zoho Books test orgs)",
+    "free_tier": "yes. Free plans/trials for most apps; Zoho MCP pricing page says no extra line item"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (multi-app platform)",
+    "remote": {
+      "url": "https://<server-name>-<org-id>.zohomcp.com/mcp/<api-key>/message",
+      "transport": "Streamable HTTP",
+      "auth": "secret key embedded in URL (treat like a password) and/or OAuth when added as a Claude connector"
+    },
+    "local": null,
+    "other": "Per-product MCPs also exist (Zoho Analytics, Zoho Projects, Zoho Creator). Zoho MCP covers 500+ integrations incl. third-party apps",
+    "one_click_install": "no deep links found; copy URL into the client"
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes. https://www.zoho.com/llms.txt (company-level, links to per-product llms.txt such as /mcp/llms.txt, /analytics/llms.txt)",
+    "markdown_pages": "yes for marketing/MCP pages (index.md, pricing.md, signup.md linked from /mcp/llms.txt); API docs themselves are HTML",
+    "openapi": "Zoho CRM publishes OpenAPI specs on GitHub (zoho/crm-oas); not uniform across products",
+    "use_with_ai_page": "Zoho MCP site + Creator Academy 'connect your Zoho MCP server to AI client' help article"
+  },
+  "time_to_first_call_minutes": {
+    "via_zoho_mcp": 10,
+    "via_rest_self_client": 15
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "score_justification": "A real, cross-app hosted MCP builder and granular OAuth scopes, but key minting is manual (short-lived grant code), multiple DCs confuse agents, and the URL-embedded secret is a weak auth pattern.",
+  "best_practice": "A user-composed MCP server: pick exactly which apps/tools an agent gets, so least privilege is set at server-creation time",
+  "biggest_gap": "No CLI/device flow to mint API tokens, and the data-center-specific hosts (zoho.com vs zoho.in) are a common agent failure point",
+  "sources": [
+    "https://www.zoho.com/llms.txt",
+    "https://www.zoho.com/mcp/llms.txt",
+    "https://www.zoho.com/mcp/index.md",
+    "https://www.zoho.com/mcp/pricing.md",
+    "https://help.zoho.com/portal/en/kb/creator/zoho-creator-academy/feature-in-focus/mcp/articles/connect-your-zoho-mcp-server-to-a-genai-assistant",
+    "https://help.zoho.com/portal/en/kb/projects/settings-in-zoho-projects/portal-configuration/articles/zoho-projects-mcp",
+    "https://tldv.io/fr/blog/zoho-mcp/"
+  ]
+}

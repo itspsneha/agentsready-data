@@ -1,0 +1,62 @@
+{
+  "company": "Auth0",
+  "domain": "auth0.com",
+  "key_path": [
+    "Sign up at auth0.com/signup (Google/GitHub/Microsoft social or email; email verification for password signups); a tenant is auto-created",
+    "`auth0 login` (Auth0 CLI device authorization flow: confirm a code in the browser) OR `npx @auth0/auth0-mcp-server init` (same device flow, token stored in the OS keychain)",
+    "For app credentials: `auth0 apps create` / `auth0 quickstarts` produce client id/secret; for Management API, create an M2M app + client_credentials grant"
+  ],
+  "human_gates": [
+    "email_verification (password signups)",
+    "device_code_confirmation in browser"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: `auth0 login` uses the device flow, or `--client-id/--client-secret` for M2M",
+    "oauth_dcr_for_mcp": "Auth0's own MCP is local (device-flow token), not remote OAuth. As an enabler, Auth0 sells DCR for MCP clients (Auth for MCP)",
+    "provisioning_api_mints_keys": "yes: Management API creates apps/clients/grants; M2M client credentials",
+    "scoped_keys": "yes: Management API scopes per M2M grant; MCP server `--read-only` and `--tools` globs",
+    "test_dev_instances": "yes: separate dev/staging/prod tenants, free",
+    "free_tier": "yes (Free plan, no card)",
+    "keyless_claimable_dev_mode": "no"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": null,
+    "local": "npx @auth0/auth0-mcp-server init [--client claude-code|cursor|vscode|windsurf|gemini] [--read-only] [--tools 'auth0_list_*']. stdio; Beta per the README",
+    "docs_mcp": "none found; Auth0 agent-skills repo for Claude Code instead",
+    "one_click": "`init --client X` writes the client config; no remote URL deeplinks"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://auth0.com/llms.txt and https://auth0.com/docs/llms.txt (sectioned _llms/en/*.txt)",
+    "llms_full_txt": "https://auth0.com/llms-full.txt, https://auth0.com/docs/llms-full.txt",
+    "md_pages": "yes: docs .md plus marketing pages as .md (e.g. /ai.md)",
+    "openapi": "https://auth0.com/docs/api/management/openapi.json",
+    "agent_skills": "https://github.com/auth0/agent-skills",
+    "use_with_ai_page": "Agent Experience Score https://auth0.com/agent-experience.md (8 models x 15 frameworks, 87% without vs 98% with Auth0 tools)"
+  },
+  "time_to_first_call_minutes": 6,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Device-flow CLI and MCP init are agent-friendly and the docs are excellent, but there's no remote OAuth MCP and no keyless path. The MCP is still Beta and local-only.",
+  "best_practice": "Publishes a measured Agent Experience Score (how well models integrate Auth0 with and without its tools). The MCP init takes `--read-only` and tool-glob scoping.",
+  "biggest_gap": "No hosted remote MCP, and getting management credentials means creating an M2M app",
+  "notes": "docs path /docs/customize/integrations/ai-tools/auth0-mcp-server from llms.txt returned 404 (stale link); the README points to /docs/get-started/mcp.",
+  "enabler_features": [
+    "Auth for MCP: authorize your MCP server, Dynamic Client Registration, FGA for MCP tools, Cloudflare MCP guide",
+    "Token Vault: agents call third-party APIs on a user's behalf without seeing credentials",
+    "CIBA asynchronous authorization (human-in-the-loop approvals via push/SMS/email)",
+    "Agent as Principal: register agents as first-class identities, agent_id in tokens and tenant logs",
+    "Cross App Access (XAA) / MCP Enterprise-Managed Authorization (ID-JAG)",
+    "Agent Gateway (announced as 'shipping next')"
+  ],
+  "sources": [
+    "https://auth0.com/llms.txt",
+    "https://auth0.com/docs/llms.txt",
+    "https://auth0.com/ai.md",
+    "https://auth0.com/agent-experience.md",
+    "https://auth0.com/docs/deploy-monitor/auth0-cli.md",
+    "https://raw.githubusercontent.com/auth0/auth0-mcp-server/main/README.md",
+    "https://auth0.com/docs/api/management/openapi.json",
+    "https://auth0.com/signup"
+  ]
+}

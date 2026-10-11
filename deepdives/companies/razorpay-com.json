@@ -1,0 +1,70 @@
+{
+  "company": "Razorpay",
+  "domain": "razorpay.com",
+  "key_path": [
+    "dashboard.razorpay.com signup: email or 10-digit Indian phone + password",
+    "enter OTP sent to email/phone",
+    "select business type, enter full name (basic details)",
+    "switch Dashboard to Test Mode",
+    "Account & Settings > API Keys > Generate Key (download key_id + key_secret; secret shown once)",
+    "live keys: complete KYC (CKYC instant since 2026-01-01 or Video KYC/doc upload) and website verification (up to 3 working days)"
+  ],
+  "human_gates": {
+    "test_keys": [
+      "phone_otp or email_verification (OTP)"
+    ],
+    "regenerate_keys": [
+      "2fa (mobile OTP)"
+    ],
+    "live": [
+      "kyc_business_verification",
+      "manual_approval (website review up to 3 working days)"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no - no official CLI login",
+    "oauth_dcr_for_mcp": "yes - mcp.razorpay.com advertises registration_endpoint /register, PKCE S256; docs recommend DCR",
+    "provisioning_api_mints_keys": "no for own account (Partner/Route Account APIs create sub-merchant accounts, beta)",
+    "scoped_restricted_keys": "no - one key pair per mode, full access",
+    "test_mode_sandbox": "yes - Test Mode keys without website or KYC",
+    "free_tier": "yes - no setup fee; test mode free"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (35+ tools: payments, orders, links, refunds, QR, settlements, payouts, checkout code generation)",
+    "remote": {
+      "url": "https://mcp.razorpay.com/mcp",
+      "transport": "streamable HTTP (docs also show npx mcp-remote bridge)",
+      "auth": "OAuth 2.0 with DCR, or base64(key_id:key_secret) merchant token in Authorization header"
+    },
+    "local": "razorpay-mcp-server via Docker (github.com/razorpay/razorpay-mcp-server)",
+    "one_click": [
+      "ChatGPT app (OAuth)",
+      "no Cursor/VS Code deeplinks found; manual mcp.json"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://razorpay.com/docs/llms.txt (~500 KB, includes 'Instructions for Large Language Model Agents' section)",
+    "markdown_pages": "yes - parallel tree under /docs/build/llm-docs/*.md",
+    "openapi": "not found (Postman collections instead)",
+    "other": "MCP tool reference, use-case pages"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 6,
+    "fully_autonomous_possible": false
+  },
+  "agent_friendliness_score": 7,
+  "score_justification": "Strong MCP (remote OAuth-DCR + local) and LLM-specific docs tree, but test keys still need a human OTP signup and keys are all-or-nothing.",
+  "best_practice": "A dedicated machine-readable docs tree (/docs/build/llm-docs/*.md) with an explicit instructions-for-agents block inside llms.txt.",
+  "biggest_gap": "No CLI/device login or scoped keys; key secret is shown once and regenerating needs a mobile OTP, so an agent can't rotate or mint keys on its own.",
+  "sources": [
+    "https://razorpay.com/docs/llms.txt",
+    "https://razorpay.com/docs/build/llm-docs/mcp-server.md",
+    "https://razorpay.com/docs/build/llm-docs/mcp-server/remote.md",
+    "https://razorpay.com/docs/build/llm-docs/mcp-server/oauth.md",
+    "https://mcp.razorpay.com/.well-known/oauth-authorization-server",
+    "https://mcp.razorpay.com/.well-known/oauth-protected-resource",
+    "https://razorpay.com/docs/build/llm-docs/payments/dashboard/account-settings/api-keys.md",
+    "https://razorpay.com/docs/build/llm-docs/payments/set-up.md"
+  ]
+}

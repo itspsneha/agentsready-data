@@ -1,0 +1,68 @@
+{
+  "company": "Plaid",
+  "domain": "plaid.com",
+  "key_path": [
+    "brew install plaid/plaid-cli/plaid",
+    "`plaid register` opens Dashboard signup in browser (email, company info) -> verify email",
+    "`plaid login` browser auth; CLI stores tokens and fetches Sandbox client_id + secret automatically",
+    "call Sandbox (e.g. /sandbox/public_token/create, test creds user_good/pass_good)",
+    "real data: `plaid trial` application form (US/CA, free, 10 Items) -> approval -> `plaid keys fetch`; full Production needs company profile + security questionnaire"
+  ],
+  "human_gates": {
+    "sandbox_keys": [
+      "email_verification",
+      "browser login"
+    ],
+    "production": [
+      "manual_approval (Trial/Production application)",
+      "kyc_business_verification (company profile)",
+      "sales_contact for Growth/Custom"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "yes - `plaid login` (browser) auto-fetches API keys; `--json` output and predictable exit codes 'for agents'",
+    "oauth_dcr_for_mcp": "yes - api.dashboard.plaid.com advertises registration_endpoint /oauth/register, PKCE S256, scope mcp:dashboard; also client_credentials token via /oauth/token",
+    "provisioning_api_mints_keys": "partial - /oauth/token mints MCP tokens from client_id/secret; keys fetched via CLI",
+    "scoped_restricted_keys": "partial - separate Sandbox/Production secrets; OAuth scope mcp:dashboard",
+    "test_mode_sandbox": "yes - Sandbox free on all accounts",
+    "free_tier": "yes - Trial plan free (10 production Items, teams created on/after 2026-04-15)"
+  },
+  "mcp": {
+    "official": true,
+    "type": "two servers: remote Dashboard MCP (production diagnostics/analytics: Item debugging, Link conversion, usage) and local Sandbox MCP (mock data, docs search, sandbox tokens)",
+    "remote": {
+      "url": "https://api.dashboard.plaid.com/mcp/",
+      "transport": "streamable HTTP",
+      "auth": "OAuth (DCR) or Bearer token from /oauth/token client_credentials; Production-approved teams only"
+    },
+    "local": "uvx mcp-server-plaid --client-id ... --secret ... (sandbox creds) from github.com/plaid/ai-coding-toolkit",
+    "one_click": [
+      "one-click install button in ai-coding-toolkit README",
+      "`claude mcp add plaid -- uvx mcp-server-plaid ...`"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://plaid.com/docs/llms.txt, https://plaid.com/docs/llms-full.txt, site-wide https://plaid.com/llms.txt",
+    "markdown_pages": "yes - index.html.md variants",
+    "openapi": "yes - github.com/plaid/plaid-openapi (linked from API docs)",
+    "other": "ai-coding-toolkit /rules for CLAUDE.md/AGENTS.md/Cursor rules; rate limits as JSON (plaid.com/data/rate-limits.json); AI assistant 'Bill' in Dashboard"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 6,
+    "fully_autonomous_possible": false
+  },
+  "agent_friendliness_score": 8,
+  "score_justification": "Agent-designed CLI that auto-fetches keys, OAuth-DCR MCP, rules files and sandbox MCP; only blocked by email signup and production approval.",
+  "best_practice": "CLI `login` that pulls API keys into local config so the agent never handles copy-pasted secrets, with explicit agent-mode (--json, stderr diagnostics, exit codes).",
+  "biggest_gap": "The remote MCP only works for Production-approved teams, so the zero-to-MCP path for a new developer is local-only.",
+  "sources": [
+    "https://plaid.com/docs/llms.txt",
+    "https://plaid.com/docs/resources/cli/index.html.md",
+    "https://plaid.com/docs/resources/mcp/index.html.md",
+    "https://api.dashboard.plaid.com/.well-known/oauth-authorization-server",
+    "https://github.com/plaid/ai-coding-toolkit",
+    "https://raw.githubusercontent.com/plaid/ai-coding-toolkit/main/sandbox/README.md",
+    "https://plaid.com/docs/quickstart/index.html.md",
+    "https://plaid.com/docs/account/billing/index.html.md"
+  ]
+}

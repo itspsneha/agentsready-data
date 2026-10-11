@@ -1,0 +1,59 @@
+{
+  "company": "Twilio",
+  "domain": "twilio.com",
+  "key_path": [
+    "Sign up at twilio.com/try-twilio (no card needed for trial)",
+    "Verify email address",
+    "Verify personal phone number (SMS OTP)",
+    "Answer onboarding questionnaire (project/product)",
+    "Console home shows Account SID + Auth Token (usable immediately)",
+    "Optional: `twilio login` (CLI prompts for SID + Auth Token, mints a Standard API key into a local profile) or Console > API keys"
+  ],
+  "human_gates": [
+    "email_verification",
+    "phone_otp",
+    "manual_approval (A2P 10DLC brand/campaign registration for US SMS beyond trial; DLT entity/template registration for India SMS)",
+    "credit_card_required (to upgrade off trial; trial only sends to <=5 verified recipient numbers in sign-up country)",
+    "2fa (recommended/enforced on many accounts)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "no - `twilio login` takes pasted Account SID + Auth Token, then auto-creates a Standard API key stored as a profile",
+    "oauth_dcr_for_mcp": "no for product MCP (docs MCP is unauthenticated); 'execute-ready, OAuth-authenticated MCP tools' listed as planned",
+    "provisioning_api_mints_keys": "yes - Keys API (v1/2010) creates Standard and Restricted keys; subaccounts API; Main keys console-only",
+    "scoped_keys": "yes - Restricted API keys with fine-grained permissions",
+    "test_credentials_sandbox": "yes - test credentials + magic numbers; mock A2P 10DLC brands/campaigns API; WhatsApp sandbox",
+    "free_tier": "trial only: 30 days, product-specific free units (100 SMS, 3,000 emails, 75 voice min)"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": "remote https://mcp.twilio.com/docs, Streamable HTTP, no auth; 2 tools (twilio__search, twilio__retrieve) over 1,800+ endpoints incl. SendGrid + Segment docs; Public Beta; read-only",
+    "product_mcp_remote": "none yet (OAuth execute tools 'planned')",
+    "product_mcp_local": "@twilio-alpha/mcp (npx, v0.7.0, Account SID + API key/secret args) - Twilio Labs alpha, exposes all Twilio APIs via OpenAPI",
+    "one_click": "Claude Connector directory listing; Cursor marketplace plugin `/add-plugin twilio-developer-kit`; `claude mcp add --transport http twilio-docs https://mcp.twilio.com/docs`; Twilio Skills"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://www.twilio.com/docs/llms.txt (~380KB index) and https://www.twilio.com/llms.txt (2.3MB)",
+    "markdown_pages": "yes - every docs page available at .md with JSON-LD front matter and dateModified",
+    "openapi": "yes - github.com/twilio/twilio-oai; /docs/openapi",
+    "use_with_ai_page": "https://www.twilio.com/docs/ai (Building with AI), Twilio Skills",
+    "agents_md_or_rules": "Twilio Skills (procedural packages) via Cursor plugin; no AGENTS.md seen"
+  },
+  "time_to_first_call_minutes": 10,
+  "time_to_first_call_notes": "~10 min to first trial SMS to the sign-up phone (human clears email + phone OTP and pastes SID/token). Production US SMS to arbitrary numbers: days-weeks (10DLC review); India: DLT registration.",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 6,
+  "agent_friendliness_justification": "Excellent agent docs (.md everywhere, unauthenticated docs MCP, Claude/Cursor listings) but credentials are still copy-paste SID/token, product MCP is alpha/local only, and messaging is wrapped in phone OTP + carrier regulation.",
+  "best_practice": "Unauthenticated, hosted search-then-retrieve docs MCP over the full OpenAPI surface (two tools, context-efficient) - zero setup before an account exists.",
+  "biggest_gap": "No OAuth/device login and no hosted product MCP: an agent cannot act on the account without a human pasting the Auth Token; regulatory gates (10DLC/DLT) are unavoidable human work.",
+  "sources": [
+    "https://www.twilio.com/docs/llms.txt",
+    "https://www.twilio.com/docs/ai.md",
+    "https://www.twilio.com/docs/ai/mcp.md",
+    "https://www.twilio.com/docs/twilio-cli/quickstart.md",
+    "https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account.md",
+    "https://www.twilio.com/docs/usage/trials.md",
+    "https://www.twilio.com/docs/iam/api-keys.md",
+    "https://www.twilio.com/docs/messaging/compliance/a2p-10dlc.md",
+    "https://registry.npmjs.org/@twilio-alpha/mcp"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "company": "Netlify",
+  "domain": "netlify.com",
+  "key_path": [
+    "npm i -g netlify-cli",
+    "zero-account option: `netlify deploy --allow-anonymous` gives a live URL with no account; human claims within 1 hour (`netlify claim` / claim link)",
+    "for a credential: `netlify login --request \"<agent> wants to login\"` prints a login URL for the human plus a URL the agent polls; human signs up or signs in (GitHub/GitLab/Bitbucket/email)",
+    "if signup was by email: verify email",
+    "CLI token is usable as NETLIFY_AUTH_TOKEN. Long-lived PAT: User settings > Applications > Personal access tokens",
+    "MCP: `npx -y add-mcp https://netlify-mcp.netlify.app/mcp` then OAuth in browser"
+  ],
+  "human_gates": [
+    "browser approval of login",
+    "email_verification (email signup only)",
+    "captcha (reCAPTCHA referenced on the app.netlify.com/signup page)"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `netlify login` (browser ticket flow) and the agent-specific `netlify login --request` mode, which returns a human URL plus a polling URL for the agent",
+    "mcp_oauth_dcr": "yes: registration_endpoint https://netlify-mcp.netlify.app/oauth-server/reg (verified via RFC 8414 metadata)",
+    "provisioning_api_mints_keys": "no documented public API to mint PATs. OAuth apps can obtain tokens",
+    "scoped_tokens": "limited: PATs are user-wide with optional expiry",
+    "free_tier": "yes, no card",
+    "claimable_anonymous": "yes: `netlify deploy --allow-anonymous` (changelog 2026-03-27). Project is live immediately, claimable within 1 hour via `netlify claim` (site id + drop token). netlify.ai FAQ: 'Agents can build and deploy static sites without needing a Netlify account'"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://netlify-mcp.netlify.app/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth with DCR (scopes offline_access, read, write)"
+    },
+    "local": "npx -y @netlify/mcp",
+    "type": "product (create projects, deploy, env vars, team mgmt via API+CLI)",
+    "one_click": "Cursor, VS Code, VS Code Insiders, LM Studio buttons; `npx add-mcp`; Claude and ChatGPT connector/app listings"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.netlify.com/llms.txt (includes quick-setup commands)",
+    "llms_full_txt": "not found (https://docs.netlify.com/llms-full.txt returned 404)",
+    "markdown_pages": "yes: append .md to any docs URL",
+    "openapi": "https://open-api.netlify.com/",
+    "use_with_ai_page": "https://netlify.ai is an agent-directed instruction page ('fetch https://netlify.ai'); docs Build with AI > Agent setup guides per agent",
+    "agent_skills": "`npx skills add netlify/context-and-tools --skill '*' --yes`"
+  },
+  "time_to_first_call_minutes": 1,
+  "fully_autonomous_possible": true,
+  "autonomy_note": "Fully autonomous for an anonymous deploy (no credential needed). A permanent credential takes about 4 minutes with one human browser approval.",
+  "agent_friendliness_score": 9,
+  "score_justification": "Anonymous deploy plus claim, a CLI login mode built for agents, DCR remote MCP and netlify.ai agent instructions. Gaps are no llms-full and coarse, user-wide PATs.",
+  "best_practice": "`netlify login --request`: the agent gets a URL to hand the human and a URL to poll, so login works even when the agent is not on the user's machine",
+  "biggest_gap": "Anonymous mode covers deploys only (claim window just 1 hour); no scoped or fine-grained tokens and no API to mint them",
+  "sources": [
+    "https://docs.netlify.com/llms.txt",
+    "https://netlify.ai",
+    "https://docs.netlify.com/build/build-with-ai/agent-setup-guides/agent-setup-overview.md",
+    "https://www.netlify.com/changelog/2026-03-27-create-and-deploy-anything-netlify-clis-improved-ax/",
+    "https://cli.netlify.com/commands/claim/",
+    "https://app.netlify.com/signup",
+    "https://netlify-mcp.netlify.app/.well-known/oauth-authorization-server"
+  ]
+}

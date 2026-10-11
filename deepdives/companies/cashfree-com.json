@@ -1,0 +1,72 @@
+{
+  "company": "Cashfree",
+  "domain": "cashfree.com",
+  "key_path": [
+    "merchant.cashfree.com signup (mobile number + OTP, email, business name)",
+    "verify email",
+    "click 'Switch to Test' in Merchant Dashboard",
+    "Developers > API Keys > Generate API Keys (complete 2FA/OTP) -> TEST_ App ID + Secret",
+    "call sandbox.cashfree.com",
+    "production: KYC docs + bank verification; payment expert calls within 24h; activation 24-48 working hours"
+  ],
+  "human_gates": {
+    "test_keys": [
+      "phone_otp",
+      "email_verification",
+      "2fa (OTP on key generation)"
+    ],
+    "live": [
+      "kyc_business_verification",
+      "manual_approval",
+      "sales_contact (onboarding call)"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "no",
+    "oauth_dcr_for_mcp": "yes - mcp.cashfree.com advertises registration_endpoint /oauth/register, PKCE S256, scopes mcp-pg-read/write, mcp-workflows-read/write",
+    "provisioning_api_mints_keys": "no (partner/embedded APIs onboard sub-merchants)",
+    "scoped_restricted_keys": "partial - per-product key pairs (PG vs Payouts) and OAuth scopes on MCP; not fine-grained API keys",
+    "test_mode_sandbox": "yes - sandbox, KYC not required",
+    "free_tier": "yes - sandbox free"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (transactions, settlements, reports, payment links, orders, refunds, sandbox payment simulation) + separate Relay MCP for payment workflows",
+    "remote": {
+      "url": "https://mcp.cashfree.com/mcp",
+      "transport": "streamable HTTP",
+      "auth": "OAuth with DCR (log in with merchant account)"
+    },
+    "local": "docs mention local option (overview page); not detailed",
+    "one_click": [
+      "Claude connectors directory",
+      "ChatGPT plugin directory",
+      "`claude mcp add --transport http cashfree https://mcp.cashfree.com/mcp`",
+      "Cursor via mcp.json"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://www.cashfree.com/docs/llms.txt (sharded into /docs/_llms/*.txt per product)",
+    "markdown_pages": "yes - Mintlify .md pages, each starts with 'Fetch the complete documentation index' pointer",
+    "openapi": "API reference generated from OpenAPI (Mintlify); no standalone URL verified",
+    "other": "Cashfree Agent Skills (Cursor/Claude Code/Copilot/Gemini CLI), Agent Toolkit (LangChain/Vercel AI/OpenAI Agents), Cashfree HERE (in-chat payments)"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 7,
+    "fully_autonomous_possible": false
+  },
+  "agent_friendliness_score": 7,
+  "score_justification": "Full AI stack (OAuth-DCR remote MCP, skills, toolkit, sharded llms.txt) but test keys sit behind phone OTP signup + 2FA on key generation.",
+  "best_practice": "Sharded llms.txt per product line (/docs/_llms/payments.txt etc.) keeps agent context small.",
+  "biggest_gap": "No CLI or programmatic key minting; every key generation needs a human OTP.",
+  "sources": [
+    "https://www.cashfree.com/docs/llms.txt",
+    "https://www.cashfree.com/docs/_llms/payments.txt",
+    "https://www.cashfree.com/docs/tools-ai/mcp-server.md",
+    "https://www.cashfree.com/docs/tools-ai/overview.md",
+    "https://mcp.cashfree.com/.well-known/oauth-authorization-server",
+    "https://www.cashfree.com/docs/payments/quickstart-guide.md",
+    "https://www.cashfree.com/docs/api-reference/authentication.md",
+    "https://www.cashfree.com/docs/help/onboarding-related/onboarding-faqs"
+  ]
+}

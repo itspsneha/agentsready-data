@@ -1,0 +1,79 @@
+{
+  "company": "Stripe",
+  "domain": "stripe.com",
+  "key_path": [
+    "npm i -g @stripe/cli",
+    "stripe sandbox create --from-git --non-interactive (solves a proof-of-work challenge, no account, test keys saved to CLI profile)",
+    "use the sandbox sk_test key / stripe CLI commands immediately",
+    "optional: within 7 days a human runs `stripe sandbox claim` (browser) to turn it into a real account; then `stripe login` (pairing code) for permanent keys",
+    "live keys: activate account (business details, bank account, identity verification)"
+  ],
+  "human_gates": {
+    "test_sandbox": [],
+    "claim_or_persistent_account": [
+      "email_verification"
+    ],
+    "mcp_oauth": [
+      "2fa (Dashboard login + OAuth consent in browser)"
+    ],
+    "live": [
+      "kyc_business_verification",
+      "2fa"
+    ]
+  },
+  "agent_native_auth": {
+    "cli_browser_device_login": "yes - `stripe login` shows a pairing code and opens the Dashboard; `--non-interactive` prints URL + code + next_step as JSON and `--complete=<poll-url>` polls until approved (built for agents). CLI access must be enabled by an admin at Settings > MCP and CLI access for CLI > v1.50.0",
+    "anonymous_provisioning": "yes - `stripe sandbox create` mints a working test-key sandbox with no account (proof-of-work instead of captcha), expires in 7 days unless claimed",
+    "oauth_dcr_for_mcp": "yes - mcp.stripe.com protected-resource -> access.stripe.com/mcp, registration_endpoint /mcp/oauth2/register, PKCE S256, public clients (auth method none)",
+    "provisioning_api_mints_keys": "partial - sandbox create via CLI; Stripe Projects CLI provisions third-party services and syncs creds to .env",
+    "scoped_restricted_keys": "yes - restricted keys plus 'Agent'-tagged keys with approval rules for sensitive actions",
+    "test_mode_sandbox": "yes - test mode + multiple general sandboxes",
+    "free_tier": "yes - no fees until you charge real cards"
+  },
+  "mcp": {
+    "official": true,
+    "type": "product MCP (actions) + docs search",
+    "remote": {
+      "url": "https://mcp.stripe.com",
+      "transport": "streamable HTTP",
+      "auth": "OAuth 2.1 with DCR (preferred) or Agent API key as Bearer; from 2026-10-31 plain secret/restricted keys without the Agent tag are rejected with 401"
+    },
+    "local": "@stripe/mcp via npx (agent toolkit); Stripe agent plugin auto-configures MCP + skills (`npm install -g @stripe/cli@latest`)",
+    "one_click": [
+      "Cursor deeplink",
+      "VS Code install link",
+      "Claude connector directory",
+      "ChatGPT plugin",
+      "`claude mcp add --transport http stripe https://mcp.stripe.com/`",
+      "`codex mcp add stripe --url https://mcp.stripe.com`"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.stripe.com/llms.txt (includes agent instructions, e.g. always check latest SDK version, prefer general sandboxes)",
+    "markdown_pages": "yes - append .md to any docs URL",
+    "openapi": "https://github.com/stripe/openapi",
+    "skills": "yes - `npx skills add https://docs.stripe.com --skill stripe-projects`; Stripe skills installed by agent plugin",
+    "other": "Stripe Directory (helps agents pick providers), Stripe Projects CLI"
+  },
+  "time_to_first_call_minutes": {
+    "human_assisted": 2,
+    "fully_autonomous_possible": true,
+    "note": "test-mode only; live requires KYC"
+  },
+  "agent_friendliness_score": 10,
+  "score_justification": "Only company here where an agent can get working test keys with zero human steps, plus OAuth-DCR remote MCP, non-interactive device login and agent-tagged keys.",
+  "best_practice": "Anonymous, claimable sandbox (`stripe sandbox create`) gated by proof-of-work instead of signup/captcha - the agent builds first, the human claims later.",
+  "biggest_gap": "Anonymous sandbox expires in 7 days and the MCP/CLI need an admin toggle on existing accounts; the 2026-10-31 key-policy change will break existing MCP configs using plain secret keys.",
+  "notes_out_of_date": "Many third-party guides still show `npx @stripe/mcp --api-key=sk_...`; that key style stops working on mcp.stripe.com after 2026-10-31.",
+  "sources": [
+    "https://docs.stripe.com/llms.txt",
+    "https://docs.stripe.com/mcp.md",
+    "https://mcp.stripe.com/.well-known/oauth-protected-resource",
+    "https://access.stripe.com/.well-known/oauth-authorization-server/mcp",
+    "https://docs.stripe.com/keys.md",
+    "https://docs.stripe.com/sandboxes.md",
+    "https://docs.stripe.com/cli/sandbox.md",
+    "https://docs.stripe.com/cli/login.md",
+    "https://docs.stripe.com/projects.md"
+  ]
+}

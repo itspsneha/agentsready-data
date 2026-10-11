@@ -1,0 +1,53 @@
+{
+  "company": "Postmark",
+  "domain": "postmarkapp.com",
+  "key_path": [
+    "Sign up at postmarkapp.com (free plan, 100 emails/mo, no card)",
+    "Confirm email",
+    "A default Server is created; Servers > API Tokens shows the Server API token",
+    "Add a Sender Signature (confirm via email link) or verify a domain (DKIM + Return-Path DNS)",
+    "Until manual account approval, can only send to addresses on own verified domains (or test@blackhole.postmarkapp.com); request approval (<24h on weekdays)"
+  ],
+  "human_gates": [
+    "email_verification",
+    "domain_verification / sender_signature_confirmation",
+    "manual_approval (every new account reviewed before sending outside own domains)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "no (community postmark-cli takes a token)",
+    "oauth_dcr_for_mcp": "no",
+    "provisioning_api_mints_keys": "partial - Account API token (X-Postmark-Account-Token) can create Servers via API, each returning server API tokens; account token itself is dashboard-only",
+    "scoped_keys": "partial - Server token (per server/stream) vs Account token; no fine-grained scopes",
+    "test_credentials_sandbox": "yes - magic token POSTMARK_API_TEST validates sends without delivering; blackhole sink address; sandbox server mode",
+    "free_tier": "yes - Free plan 100 emails/mo, no overages"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": "none",
+    "product_mcp_local": "npx -y @activecampaign/postmark-mcp (env POSTMARK_SERVER_TOKEN, DEFAULT_SENDER_EMAIL, DEFAULT_MESSAGE_STREAM); 24 tools with read-only/destructive annotations; MIT",
+    "docs_mcp": "no",
+    "one_click": "Cursor deeplink badge in GitHub README; landing page postmarkapp.com/lp/mcp warns to verify the official package (an impostor unscoped 'postmark-mcp' npm package was a 2025 supply-chain incident)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://postmarkapp.com/llms.txt (hand-curated, quick-start + task recipes) and https://postmarkapp.com/pricing.txt",
+    "markdown_pages": "no .md per page (developer/llms.txt 404)",
+    "openapi": "yes - ActiveCampaign/postmark-openapi on GitHub (not linked from llms.txt)",
+    "use_with_ai_page": "https://postmarkapp.com/lp/mcp/",
+    "agents_md_or_rules": "no"
+  },
+  "time_to_first_call_minutes": 5,
+  "time_to_first_call_notes": "Token visible right after signup; POSTMARK_API_TEST lets an agent exercise the API in 0 minutes with no account. Real delivery outside own domain waits on manual approval (up to ~24h).",
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "agent_friendliness_justification": "Great llms.txt and a no-account test token, plus an annotated official MCP, but MCP is local + raw token only, no OAuth/CLI login, and manual account approval gates real sending.",
+  "best_practice": "A public magic test token (POSTMARK_API_TEST) documented at the top of llms.txt so agents can validate integrations before any account exists.",
+  "biggest_gap": "No hosted/OAuth MCP and a human-reviewed account approval before sending to arbitrary recipients.",
+  "sources": [
+    "https://postmarkapp.com/llms.txt",
+    "https://postmarkapp.com/pricing.txt",
+    "https://postmarkapp.com/support/article/1084-how-does-the-account-approval-process-work",
+    "https://postmarkapp.com/lp/mcp/",
+    "https://github.com/ActiveCampaign/postmark-mcp",
+    "https://raw.githubusercontent.com/ActiveCampaign/postmark-mcp/main/README.md"
+  ]
+}

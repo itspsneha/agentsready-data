@@ -1,0 +1,60 @@
+{
+  "company": "Deepgram",
+  "domain": "deepgram.com",
+  "key_path": [
+    "Sign up at console.deepgram.com/signup (email or Google/GitHub)",
+    "Verify email (email signups)",
+    "$200 free credit, no card",
+    "Console > Project > API Keys > Create (role, expiration, tags)",
+    "OR install the CLI (curl https://deepgram.com/install.sh | sh) and run `dg login`, which authorizes in the browser and stores a key in the keyring"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "agent_native_auth": {
+    "cli_login_browser_or_device": "yes. `dg login` opens the Console to authorize the CLI, with keyring storage and named profiles; `dg whoami`",
+    "oauth_dynamic_client_registration": "no",
+    "provisioning_api_mints_keys": "yes. The Management API creates keys (POST /v1/projects/{id}/keys) and `dg keys` wraps it. The docs say the FIRST key must come from the Console, which conflicts with `dg login`",
+    "scoped_keys": "yes. Role-based keys, expiration, tags, plus 30-second temporary JWTs for client-side use",
+    "test_mode_sandbox": "partial. Playground with no sign-up for trying models",
+    "free_credits_or_tier": "yes. $200 credit"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://developers.deepgram.com/_mcp/server (works, no auth)",
+      "transport": "streamable HTTP",
+      "auth": "none",
+      "issue": "The 'Agentic tools' page promotes https://api.dx.deepgram.com/kapa/mcp and https://deepgram.mcp.kapa.ai, and both returned 401 'Authentication required' on 2026-10-11"
+    },
+    "product_mcp": "local only. `dg mcp` (stdio, or SSE on a port) is built into the CLI and reuses its login. There is also standalone `pip install deepgram-mcp` (github.com/deepgram/mcp, 1 star, last push 2026-05-06), which fetches its tool list from the API at runtime",
+    "local_package": "deepctl (pip/uv/pipx) or deepgram-mcp",
+    "one_click_install": "`claude mcp add` one-liners. Skills repo github.com/deepgram/skills"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.deepgram.com/llms.txt",
+    "llms_full_txt": "https://developers.deepgram.com/llms-full.txt (same size as llms.txt, likely not a full dump)",
+    "markdown_pages": "yes, append .md",
+    "openapi": "https://github.com/deepgram/deepgram-api-specs",
+    "agents_md_or_rules": "'Agentic developer tools' page; deepgram/skills"
+  },
+  "time_to_first_call_minutes": 4,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "score_justification": "Generous free credit with no card, CLI browser login, a key-management API, and a CLI that doubles as an MCP server. The documented docs-MCP URL is broken and there is no remote OAuth MCP.",
+  "best_practice": "One CLI handles login, every API call and the MCP server (`dg mcp`), so an agent installs one binary and inherits its auth.",
+  "biggest_gap": "The advertised docs MCP endpoints return 401, and the product MCP is local-only (stdio/SSE) with no hosted OAuth server.",
+  "notes_out_of_date": "The 'first key must be created in Console' statement conflicts with `dg login`; the kapa docs-MCP URLs on the agentic-tools page look stale.",
+  "sources": [
+    "https://developers.deepgram.com/llms.txt",
+    "https://developers.deepgram.com/developer-tools/agentic-tools.md",
+    "https://developers.deepgram.com/developer-tools/cli/authentication.md",
+    "https://developers.deepgram.com/developer-tools/cli/getting-started.md",
+    "https://developers.deepgram.com/docs/create-additional-api-keys.md",
+    "https://developers.deepgram.com/guides/fundamentals/make-your-first-api-request.md",
+    "https://developers.deepgram.com/_mcp/server",
+    "https://api.dx.deepgram.com/kapa/mcp",
+    "https://github.com/deepgram/mcp",
+    "https://github.com/deepgram/deepgram-api-specs"
+  ]
+}

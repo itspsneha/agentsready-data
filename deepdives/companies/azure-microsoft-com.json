@@ -1,0 +1,66 @@
+{
+  "company": "Microsoft Azure / Azure OpenAI",
+  "domain": "azure.microsoft.com",
+  "key_path": [
+    "Create/sign in to a Microsoft account",
+    "Create an Azure free account: phone verification (SMS/call) + credit/debit card identity check (temporary ~$1 hold; virtual/prepaid cards rejected), accept agreement",
+    "`az login` (browser, or `az login --use-device-code`)",
+    "`az group create` then `az cognitiveservices account create --kind OpenAI` (or a Foundry/AIServices resource) in a supported region",
+    "`az cognitiveservices account deployment create` to deploy a model (e.g. a GPT model) with SKU/capacity. Quota may need a request for some models",
+    "`az cognitiveservices account keys list` to get key1/key2 + endpoint (or use keyless Entra ID via DefaultAzureCredential, which Microsoft recommends)"
+  ],
+  "human_gates": [
+    "phone_otp",
+    "credit_card_required",
+    "email_verification",
+    "2fa"
+  ],
+  "human_gates_notes": "The card + phone identity check is unavoidable for a new subscription. MFA is now enforced for Azure portal/CLI sign-in. The old Azure OpenAI access-request form is no longer needed for standard models, but some models/regions still have quota or limited-access approval.",
+  "agent_native_auth": {
+    "cli_login": "yes. `az login` browser/device-code flow; `azd auth login`",
+    "oauth_dcr_for_mcp": "no for the Azure MCP Server (local, uses Azure CLI/Entra credentials). The MS Learn docs MCP needs no auth",
+    "provisioning_api_mint_keys": "yes. Everything is ARM/CLI-scriptable: create resource, deploy model, list/regenerate keys",
+    "scoped_keys": "partial. Resource-level keys are all-powerful for that resource; fine-grained scoping via Entra RBAC (Cognitive Services OpenAI User) and managed identity",
+    "sandbox_test_credentials": "no separate sandbox. Free account credit ($200/30 days) acts as one",
+    "free_tier": "yes. Free account credit + some always-free services; Azure OpenAI is pay-as-you-go against credit"
+  },
+  "mcp": {
+    "official": true,
+    "docs_mcp": {
+      "url": "https://learn.microsoft.com/api/mcp",
+      "transport": "Streamable HTTP (protocol 2025-06-18, verified by initialize probe)",
+      "auth": "none"
+    },
+    "product_mcp_local": {
+      "package": "npx -y @azure/mcp@latest server start (also NuGet/.NET tool, PyPI via uvx, MCPB)",
+      "auth": "Azure CLI / Entra credentials (DefaultAzureCredential)",
+      "scope": "broad Azure services incl. Foundry/AI resources"
+    },
+    "product_mcp_remote": "Self-host the Azure MCP Server on Azure Container Apps via azd templates for Foundry/Copilot Studio. Microsoft-hosted remote MCPs exist for specific services (e.g. Azure DevOps remote MCP, public preview Mar 2026)",
+    "one_click_install": "yes. VS Code/VS Code Insiders deep-link install buttons, Visual Studio 2026, IntelliJ, Eclipse, and Claude Code `/plugin install azure@claude-plugins-official`"
+  },
+  "docs_for_agents": {
+    "llms_txt": "no (learn.microsoft.com/llms.txt 404)",
+    "markdown_pages": "yes. MS Learn serves markdown with ?accept=text/markdown / Accept: text/markdown",
+    "openapi": "yes. Azure REST API specs (github.com/Azure/azure-rest-api-specs), including the Azure OpenAI inference spec",
+    "use_with_ai_page": "yes. Azure MCP Server get-started + Learn MCP docs"
+  },
+  "time_to_first_call_minutes": {
+    "new_user": 30,
+    "existing_subscription_via_cli": 8
+  },
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Fully CLI-scriptable end to end (az login > create > deploy > keys) with first-party MCPs and one-click IDE installs, but card + phone identity checks, MFA, a deploy-a-model step and quota make zero-to-call slower than Gemini.",
+  "best_practice": "Keyless Entra ID auth is the recommended default, and the Azure MCP ships as a first-party Claude Code plugin and IDE extensions",
+  "biggest_gap": "No llms.txt, a heavy signup gate (card + phone), and a 'deploy a model before you can call it' step that agents often miss",
+  "sources": [
+    "https://learn.microsoft.com/api/mcp",
+    "https://raw.githubusercontent.com/microsoft/mcp/main/servers/Azure.Mcp.Server/README.md",
+    "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started",
+    "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/how-to/deploy-remote-mcp-server-microsoft-foundry",
+    "https://azure.microsoft.com/free/free-account-faq",
+    "https://learn.microsoft.com/cli/azure/cognitiveservices/account/keys",
+    "https://devops.com/azure-devops-remote-mcp-server-lands-in-microsoft-foundry-giving-ai-agents-direct-access-to-your-devops-data/"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "company": "Datadog",
+  "domain": "datadoghq.com",
+  "key_path": [
+    "Run `npx @datadog/ai-setup-cli --site datadoghq.com`: it opens the browser for account creation or OAuth (docs: 'for account creation if you don't have an account yet'). Alternative: the web trial form",
+    "Trial form: business email, choose a region/site (irreversible), password, name, job title, company; phone is optional; no card; 14-day trial",
+    "Grant OAuth consent, after which the CLI or MCP holds a scoped token",
+    "For static creds: Organization Settings > API Keys and Application Keys (or PAT/SAT); `pup auth login` does OAuth2+PKCE in the browser"
+  ],
+  "human_gates": [
+    "email_verification",
+    "business_email_required (personal domains rejected on the trial form)",
+    "region_selection (irreversible, the agent must ask)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_or_device_login": "yes: `pup auth login` (OAuth2+PKCE, browser); `@datadog/ai-setup-cli` uses browser OAuth with a localhost callback, or DD_API_KEY/DD_APP_KEY when headless",
+    "oauth_dcr_for_mcp": "yes: remote MCP authenticates with OAuth 2.0 inside the client (org admins manage MCP OAuth redirect URLs under organization-settings/mcp)",
+    "provisioning_api_mints_keys": "yes: API/app keys, PATs and service accounts can be created via API by an authenticated user (pup covers 'Users, API keys, application keys, organizations')",
+    "scoped_keys": "yes: scoped application keys, Personal Access Tokens, Service Access Tokens; MCP toolsets via ?toolsets= query",
+    "test_dev_instances": "no (separate orgs only)",
+    "free_tier": "14-day full trial, no card; limited free tier afterwards",
+    "keyless_claimable_dev_mode": "no"
+  },
+  "mcp": {
+    "official": true,
+    "product_mcp_remote": {
+      "url": "site-specific endpoint shown by the docs site selector (the .md shows the placeholder <YOUR_MCP_SERVER_ENDPOINT>), e.g. ?toolsets=onboarding",
+      "transport": "streamable HTTP",
+      "auth": "OAuth (preferred), or PAT/SAT bearer header, or DD_API_KEY+DD_APP_KEY headers"
+    },
+    "local": "separate local-only Code Security MCP (SAST/SCA/secrets); the main MCP is remote-only",
+    "docs_mcp": "no separate docs MCP; onboarding toolset instruments apps",
+    "one_click": "Cursor install deeplink per site; Cursor/Codex/Grok plugins; Claude directory connector; ChatGPT app (Preview, US1 only)"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://docs.datadoghq.com/llms.txt (hierarchical: per-section llms.txt files)",
+    "llms_full_txt": "none (404)",
+    "md_pages": "yes, .md for every page, including 'Note for AI agents' blocks",
+    "openapi": "public in the DataDog/datadog-api-client-* repos (not re-fetched)",
+    "agent_skills": "pup ships embedded skills (`pup skills install`)",
+    "use_with_ai_page": "Agentic Onboarding: https://docs.datadoghq.com/agentic_onboarding/setup.md"
+  },
+  "time_to_first_call_minutes": 8,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 7,
+  "score_justification": "Strong OAuth everywhere (CLI, MCP, setup CLI) and a CLI that can start account creation. Business-email-only signup, region choice and site-specific URLs add friction.",
+  "best_practice": "The headless setup CLI falls back cleanly: browser OAuth when interactive, DD_API_KEY/DD_APP_KEY env vars when unattended. MCP toolsets can be selected by query param.",
+  "biggest_gap": "Region/site fragmentation: every URL depends on the site, and the .md docs render placeholders instead of real endpoints. Personal emails are blocked.",
+  "notes": "ChatGPT app and Codex plugin are Preview and US1-only.",
+  "sources": [
+    "https://docs.datadoghq.com/llms.txt",
+    "https://docs.datadoghq.com/mcp_server.md",
+    "https://docs.datadoghq.com/mcp_server/setup.md",
+    "https://docs.datadoghq.com/cli.md",
+    "https://docs.datadoghq.com/agentic_onboarding/setup.md",
+    "https://www.datadoghq.com/free-datadog-trial/"
+  ]
+}

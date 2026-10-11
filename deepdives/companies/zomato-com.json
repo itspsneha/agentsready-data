@@ -1,0 +1,69 @@
+{
+  "company": "Zomato",
+  "domain": "zomato.com",
+  "key_path": [
+    "No developer API key (public API shut down). Personal agent path: add remote MCP https://mcp-server.zomato.com/mcp in Claude (custom connector or official directory listing), ChatGPT, VS Code or Postman.",
+    "Client registers via DCR (/register) -> OAuth authorize -> log in to Zomato (phone OTP) -> token.",
+    "Tools: restaurant discovery, menus, cart, place order, QR-code payment (user pays via UPI QR).",
+    "Custom clients (e.g. Claude Code localhost redirect) are NOT on the redirect-URI allowlist -> must fill 'MCP Developer Access' form (personal use only) and wait for review."
+  ],
+  "human_gates": [
+    "phone_otp",
+    "manual_approval (redirect-URI allowlist / developer access form)",
+    "partner_application (no third-party apps allowed)"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no CLI",
+    "oauth_dcr_for_mcp": "yes - RFC 7591 registration_endpoint https://mcp-server.zomato.com/register, PKCE S256, token auth 'none'; but redirect URIs allowlisted to claude.ai, chatgpt.com, vscode.dev, Postman",
+    "sandboxes": "no",
+    "scoped_tokens": "coarse (mcp:tools, mcp:resources, mcp:prompts)",
+    "free_tier": "yes for personal use",
+    "evidence": "https://mcp-server.zomato.com/.well-known/oauth-authorization-server ; https://github.com/Zomato/mcp-server-manifest"
+  },
+  "mcp": {
+    "official": true,
+    "remote": [
+      {
+        "name": "Zomato MCP",
+        "url": "https://mcp-server.zomato.com/mcp",
+        "transport": "streamable HTTP",
+        "auth": "OAuth 2.1 + DCR (allowlisted redirects)"
+      }
+    ],
+    "local": [
+      "via `npx mcp-remote https://mcp-server.zomato.com/mcp` for Claude Desktop free plan"
+    ],
+    "types": [
+      "consumer commerce MCP with real ordering + payment"
+    ],
+    "directories": "Claude directory: 'Zomato'. Works as ChatGPT custom connector (chatgpt.com redirect allowlisted).",
+    "agentic_commerce_protocols": [
+      "proprietary MCP order + UPI QR payment; llms.txt documents cookie-session web APIs for in-browser agents"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "yes - zomato.com/llms.txt: a full agent playbook for in-browser agents (listing/menu/cart endpoints, cookie+CSRF auth, 'obtain explicit user confirmation before placing orders'). /mcp-tools.md referenced but 403.",
+    "markdown_pages": "llms.txt only",
+    "openapi": "no",
+    "build_with_ai": "GitHub README (Zomato/mcp-server-manifest)",
+    "robots_ai_stance": "Paradox: ClaudeBot, Claude-User, Claude-SearchBot, GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Perplexity-User, Google-Extended -> Allow /llms.txt and /mcp-tools.md, Disallow / everything else"
+  },
+  "time_to_first_call_minutes": 3,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 5,
+  "score_justification": "Only company in the batch letting a consumer agent actually place and pay for an order, with standards-compliant DCR, but restricted to allowlisted clients and personal use, labeled 'testing purposes', and robots blocks AI agents from the site.",
+  "best_practice": "llms.txt written as an operating manual for browser agents with explicit confirm-before-order rule; DCR-enabled remote MCP with one-click VS Code install.",
+  "biggest_gap": "No third-party apps permitted; redirect allowlist breaks DCR for new clients; robots.txt contradicts the llms.txt invitation.",
+  "sources": [
+    "https://github.com/Zomato/mcp-server-manifest",
+    "https://raw.githubusercontent.com/Zomato/mcp-server-manifest/master/README.md",
+    "https://mcp-server.zomato.com/mcp (probed: 401)",
+    "https://mcp-server.zomato.com/.well-known/oauth-protected-resource",
+    "https://mcp-server.zomato.com/.well-known/oauth-authorization-server",
+    "https://www.zomato.com/llms.txt",
+    "https://www.zomato.com/robots.txt",
+    "https://www.zomato.com/mcp-tools.md (403)",
+    "https://claude.com/marketplace/connectors/zomato",
+    "https://www.analyticsvidhya.com/blog/2025/11/zomato-mcp-server/"
+  ]
+}

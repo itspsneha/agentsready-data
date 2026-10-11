@@ -1,0 +1,60 @@
+{
+  "company": "Notion",
+  "domain": "notion.so",
+  "key_path": [
+    "Sign up at notion.so with Google/Apple OAuth (or email + 6-digit login code)",
+    "Onboarding creates a personal workspace",
+    "Agent installs CLI: curl -fsSL https://ntn.dev | bash; run 'ntn login' (browser authorize) -> CLI can make API calls ('ntn api v1/users')",
+    "Alternative raw token: Developer portal https://www.notion.so/developers/tokens > create Personal Access Token (name, workspace, capabilities: Notion API / Workers)",
+    "Call GET https://api.notion.com/v1/users/me with Bearer PAT + Notion-Version: 2026-03-11"
+  ],
+  "human_gates": [
+    "email_verification"
+  ],
+  "human_gates_notes": "Email code avoided with Google OAuth. Workspace PAT creation policy can block members; MCP connections can be disabled/revoked by workspace owners. Legacy internal integrations still require sharing each page with the bot (PATs remove that).",
+  "agent_native_auth": {
+    "cli_device_login": "yes - 'ntn login' browser flow, creds in system keychain",
+    "mcp_oauth_dcr": "yes - mcp.notion.com /register (RFC 7591) and client_id_metadata_document_supported=true; docs have 'Build an MCP client' DCR guide",
+    "personal_access_tokens": "yes - new user-scoped PATs act as the creator, no per-page sharing needed",
+    "scoped_tokens": "partial - PAT capabilities (Notion API, Workers); internal connections have content capabilities",
+    "management_api_mints_keys": "partial - OAuth token create/introspect/revoke/refresh endpoints; Admin API to list/revoke members' MCP connections; enterprise-managed auth via IdP ID-JAG for MCP tokens",
+    "free_tier_or_sandbox": "yes - Free plan"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.notion.com/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth 2.0 + PKCE with DCR (resource_name 'Notion MCP (Beta)'); enterprise ID-JAG exchange"
+    },
+    "local": "open-source notion-mcp-server exists but docs say it is no longer actively maintained",
+    "type": "product MCP (plus Notion Skills via MCP)",
+    "one_click_install": "copy-paste commands for Claude Code/Codex/Cursor; Claude Code plugin (makenotion/claude-code-notion-plugin)",
+    "claude_directory": true,
+    "chatgpt_directory": "yes (Notion connector in ChatGPT) - not re-verified"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://developers.notion.com/llms.txt (200, ~39KB); also https://www.notion.com/llms.txt",
+    "llms_full_txt": "https://developers.notion.com/llms-full.txt (200)",
+    "markdown_pages": "yes - every page has .md variant with an agent-directed 'Documentation Index' header",
+    "openapi": "https://developers.notion.com/openapi.json (200)",
+    "ai_page": "https://developers.notion.com/guides/mcp/overview.md",
+    "agents_md_or_rules": "MCP security best practices page; Notion Skills"
+  },
+  "time_to_first_call_minutes": 4,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 9,
+  "score_justification": "2026 overhaul: CLI with browser login, user-scoped PATs, DCR remote MCP, llms.txt + llms-full + OpenAPI + .md pages.",
+  "best_practice": "Every .md doc page begins with a pointer telling agents to fetch llms.txt first, and PATs eliminated the old 'share every page with your integration' trap.",
+  "biggest_gap": "Remote MCP is OAuth-only (no PAT bearer documented) and still labelled Beta in its resource metadata; local server abandoned.",
+  "sources": [
+    "https://developers.notion.com/llms.txt",
+    "https://developers.notion.com/docs/mcp",
+    "https://developers.notion.com/guides/get-started/personal-access-tokens.md",
+    "https://developers.notion.com/cli/get-started/overview.md",
+    "https://developers.notion.com/guides/mcp/get-started-with-mcp.md",
+    "https://developers.notion.com/guides/mcp/build-mcp-client.md",
+    "https://developers.notion.com/guides/mcp/hosting-open-source-mcp.md",
+    "https://mcp.notion.com/.well-known/oauth-authorization-server"
+  ]
+}

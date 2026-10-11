@@ -1,0 +1,57 @@
+{
+  "company": "Airbnb",
+  "domain": "airbnb.com",
+  "key_path": [
+    "No self-serve path. Airbnb API (Homes/Activities API at developer.withairbnb.com) is for invited Preferred Software Partners only; Airbnb's partner managers reach out to prospects.",
+    "If invited: sign partner agreement -> Partner Portal access -> create app -> sandbox (Sandbox V2) -> certification -> production.",
+    "No guest/booking API and no official MCP; consumer agents can only browse the website (subject to robots)."
+  ],
+  "human_gates": [
+    "partner_application",
+    "sales_contact",
+    "manual_approval",
+    "app_review",
+    "kyc_business_verification"
+  ],
+  "agent_native_auth": {
+    "cli_browser_login": "no",
+    "oauth_dcr_for_mcp": "no (no MCP)",
+    "sandboxes": "yes for invited partners (Sandbox V2)",
+    "scoped_tokens": "partner-only",
+    "free_tier": "no public access",
+    "evidence": "https://developer.withairbnb.com/ (Partner Portal); secondary sources on invite-only program"
+  },
+  "mcp": {
+    "official": false,
+    "remote": [],
+    "local": [],
+    "types": [],
+    "directories": "Not in Claude directory (claude.com/marketplace/connectors/airbnb 404). Not a ChatGPT app: CEO Brian Chesky said in Oct 2025 the Apps SDK 'wasn't quite robust enough'; still absent as of Oct 2026. Only unofficial scraping MCPs (openbnb, Apify) exist.",
+    "agentic_commerce_protocols": [
+      "none"
+    ]
+  },
+  "docs_for_agents": {
+    "llms_txt": "no - airbnb.com/llms.txt 404; developer.withairbnb.com/llms.txt empty",
+    "markdown_pages": "no (ReadMe-hosted partner docs with 'Ask AI')",
+    "openapi": "API Explorer for partners only",
+    "build_with_ai": "no",
+    "robots_ai_stance": "GPTBot and ClaudeBot: Disallow /. ChatGPT-User, OAI-SearchBot, anthropic-ai, PerplexityBot, meta-externalagent get their own groups (allow /calendar/ical/, many disallows). Claude-User not named (falls under *)."
+  },
+  "time_to_first_call_minutes": null,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 1,
+  "score_justification": "Invite-only partner API, no MCP, no consumer agent integration, and training crawlers blocked; an agent has no sanctioned path at all.",
+  "best_practice": "Explicit per-agent robots groups (distinguishing user-triggered ChatGPT-User from GPTBot training) is at least a deliberate policy.",
+  "biggest_gap": "No sanctioned agent surface of any kind; strategic choice to wait for richer agent SDKs.",
+  "sources": [
+    "https://developer.withairbnb.com/",
+    "https://developer.withairbnb.com/llms.txt",
+    "https://www.airbnb.com/robots.txt",
+    "https://www.airbnb.com/llms.txt",
+    "https://claude.com/marketplace/connectors/airbnb",
+    "https://fortune.com/2025/10/21/brian-chesky-openai-tools-not-ready",
+    "https://wwwhatsnew.com/2026/10/02/brian-chesky-airbnb-agentes-ia-sistema-operativo-mcp-voz-2026/",
+    "https://elfsight.com/blog/how-to-get-and-use-airbnb-api-partnership-and-integration"
+  ]
+}

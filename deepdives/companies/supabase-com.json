@@ -1,0 +1,57 @@
+{
+  "company": "Supabase",
+  "domain": "supabase.com",
+  "key_path": [
+    "human signs up at supabase.com/dashboard/sign-up (GitHub, ChatGPT, SSO or email+password)",
+    "if email+password: verify email",
+    "`supabase login`: browser flow (or `--no-browser` prints URL + verification code). Alternatively dashboard > Account > Access Tokens > create PAT (sbp_...)",
+    "Management API (`POST /v1/projects`) creates a project in the default org; `GET/POST /v1/projects/{ref}/api-keys` returns publishable/secret keys",
+    "MCP: `claude mcp add --transport http supabase https://mcp.supabase.com/mcp` then OAuth via DCR, picking the org"
+  ],
+  "human_gates": [
+    "email_verification (email signup only)",
+    "browser OAuth consent"
+  ],
+  "agent_native_auth": {
+    "cli_device_flow": "yes: `supabase login` opens a browser and polls; `--no-browser` for remote. `--token`/SUPABASE_ACCESS_TOKEN for CI",
+    "mcp_oauth_dcr": "yes: registration_endpoint https://api.supabase.com/platform/oauth/apps/register. AS also supports a jwt-bearer grant",
+    "provisioning_api_mints_keys": "yes: Management API (OpenAPI) creates projects and project API keys. OAuth apps for partner platforms",
+    "scoped_tokens": "yes: MCP OAuth has granular scopes (projects:read/write, database:read/write, edge_functions, storage, secrets...). Docs mention scoped PATs; MCP URL params project_ref, read_only, features",
+    "free_tier": "yes: 2 free projects, no card (pause after inactivity)",
+    "claimable_anonymous": "partial: Management API has project claim tokens (/v1/projects/{ref}/claim-token, /v1/organizations/{slug}/project-claim/{token}, /v1/oauth/authorize/project-claim) so a platform can create a project and hand it to a user. Needs the platform's own Supabase org; there is no anonymous agent path like Neon's"
+  },
+  "mcp": {
+    "official": true,
+    "remote": {
+      "url": "https://mcp.supabase.com/mcp",
+      "transport": "streamable_http",
+      "auth": "OAuth DCR (default) or PAT bearer header; labelled 'Beta' in resource metadata"
+    },
+    "local": "CLI local stack exposes http://localhost:54321/mcp",
+    "type": "product + docs (SQL, migrations, Edge Functions, branching, logs, search_docs)",
+    "one_click": "config generator / install buttons for Cursor, VS Code, Claude Code, ChatGPT, Gemini CLI, etc. on the MCP docs page"
+  },
+  "docs_for_agents": {
+    "llms_txt": "https://supabase.com/llms.txt (+ per-SDK llms/js.txt, llms/cli.txt, llms/api.txt)",
+    "llms_full_txt": "https://supabase.com/llms-full.txt",
+    "markdown_pages": "yes: guides available as .md",
+    "openapi": "https://supabase.com/openapi.json (Management API)",
+    "use_with_ai_page": "https://supabase.com/docs/guides/getting-started/mcp; /docs/guides/ai-tools.md"
+  },
+  "time_to_first_call_minutes": 5,
+  "fully_autonomous_possible": false,
+  "agent_friendliness_score": 8,
+  "score_justification": "DCR MCP with fine-grained scopes and safety URL params, a full Management API that mints project keys, and 'Continue with ChatGPT' signup. Still no anonymous path for an agent working alone.",
+  "best_practice": "MCP URL params (project_ref, read_only=true, features=...) plus OAuth scopes give agents least-privilege access without custom tokens",
+  "biggest_gap": "No anonymous or claimable database for a lone agent (claim tokens exist only for platforms with their own org), so a human account is always needed first",
+  "sources": [
+    "https://supabase.com/llms.txt",
+    "https://supabase.com/docs/guides/getting-started/mcp",
+    "https://supabase.com/openapi.json",
+    "https://supabase.com/llms/cli.txt",
+    "https://supabase.com/docs/reference/cli/supabase-login",
+    "https://supabase.com/dashboard/sign-up",
+    "https://mcp.supabase.com/.well-known/oauth-protected-resource/mcp",
+    "https://api.supabase.com/.well-known/oauth-authorization-server"
+  ]
+}
