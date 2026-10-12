@@ -208,7 +208,10 @@ class Scanner:
         docs_url, docs_r = None, None
         for u in dict.fromkeys(docs_candidates):
             r = await self.get(u)
-            if self.ok(r) and urlparse(str(r.url)).netloc:
+            # a "docs" link that just redirects to the homepage isn't docs (e.g. /docs -> /)
+            fu, hu = urlparse(str(r.url)) if self.ok(r) else None, urlparse(final)
+            same_as_home = fu is not None and fu.netloc.removeprefix("www.") == hu.netloc.removeprefix("www.") and fu.path.rstrip("/") == hu.path.rstrip("/")
+            if self.ok(r) and urlparse(str(r.url)).netloc and not same_as_home:
                 docs_url, docs_r = str(r.url), r
                 break
         res["docs_url"] = docs_url
