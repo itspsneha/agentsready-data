@@ -23,6 +23,12 @@ Snapshot: **11 October 2026**.
 - Across 1,846 reachable companies, the average readiness score is **41/100**. 50% publish llms.txt, 20% run a product MCP server, and **14%** let agents self-register an OAuth client.
 - Sites on hosted docs platforms (Mintlify, Fern, GitBook) have llms.txt **97%** of the time, against 56% for custom docs.
 
+## Check your own site
+
+- **In the browser:** [agentsready.dev](https://agentsready.dev/?utm_source=github&utm_medium=data-repo) scores any site the same way, free, no sign-up.
+- **In your agent:** the remote MCP server at `https://agentsready.dev/mcp` (no key). Claude Code: `claude mcp add --transport http agentsready https://agentsready.dev/mcp`. [Cursor, VS Code and Claude](https://agentsready.dev/mcp-server).
+- **On every pull request:** the [GitHub Action](https://github.com/itspsneha/agentsready-action) comments the score and fixes, and fails the build when AI agents get blocked.
+
 ## Contribute
 
 Gates change fast. If a platform added a sandbox, dropped phone verification or launched an MCP server, the benchmark should know.
